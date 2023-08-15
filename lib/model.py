@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sqlalchemy
+# import sqlalchemy
 from sqlalchemy.orm import declarative_base, relationship, backref
 from sqlalchemy import Table, Boolean, ForeignKey, Column, Integer, String, MetaData, select
 from sqlalchemy.dialects.sqlite import DATE
@@ -155,7 +155,8 @@ class Schedule(Base):
             vol_id = volunteer.id,
             role_id = role.id
         )
-        
+        volunteer.assigned = "Yes"
+        session.commit()
         session.add(schedule)
         session.commit()
 
@@ -164,7 +165,8 @@ class Schedule(Base):
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
         volunteer = session.query(Volunteer).filter(Volunteer.username == username).one()
         [session.delete(schedule) for schedule in volunteer.schedules if schedule.date == schedule_date]
-        
+        if(len(volunteer.schedules) == 1 ):
+            volunteer.assigned = "No"
         session.commit()
 
     def swap(username, input_date, role, swap_name):
@@ -216,11 +218,20 @@ class Schedule(Base):
 
     def query_by_name(username):
         volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()  
-        schedule = session.query(Schedule).filter(Schedule.vol_id == volunteer.id).all()    
-        
-        print("\nSamuel Martin:\n")
-        [print(schedule) for schedule in schedule]
-        
+        volunteers = session.query(Volunteer).all()
+        roles = session.query(Role).all()
+                
+        print(f"\n{volunteer.first_name} {volunteer.last_name} \n")
+        for schedule in volunteer.schedules:
+            for role in roles:
+                if role.id == schedule.role_id:
+                    if schedule.swappout_id:
+                        for vol in volunteers:
+                            if vol.id == schedule.swappout_id:
+                                print(schedule.date.strftime("%B %d %Y"), role.position, "<" + vol.username + ">")
+                    else:
+                        print(schedule.date.strftime("%B %d %Y"), role.position)  
+                           
     def __repr__(self):
         return f'Schedule: {self.id}, ' + \
                f'Swapped: {self.swappout_id}, ' + \
@@ -228,4 +239,4 @@ class Schedule(Base):
                f'Role: {self.role_id}, ' + \
                f'Date: {self.date} '
              
-Schedule.query_by_name("Samuel_Martin")             
+Schedule.query_by_name("Devin_Cruz")             

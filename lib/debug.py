@@ -4,6 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import Volunteer, Role, Schedule, volunteer_role
 from datetime import datetime, date
+from sqlalchemy import Table, Boolean, ForeignKey, Column, Integer, String, MetaData, select
+
 
 if __name__ == '__main__':
     engine = create_engine('sqlite:///volunteers.db')
