@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sqlalchemy
 from sqlalchemy.orm import declarative_base, relationship, backref
-from sqlalchemy import Table, Boolean, ForeignKey, Column, Integer, String, MetaData
+from sqlalchemy import Table, Boolean, ForeignKey, Column, Integer, String, MetaData, select
 from sqlalchemy.dialects.sqlite import DATE
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -167,30 +167,60 @@ class Schedule(Base):
         
         session.commit()
 
-    def swap(username, swapname, input_date):
-        pass   
+    def swap(username, input_date, role, swap_name):
+        schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
+        role = session.query(Role).filter(Role.position == role).first()
+        volunteer=session.query(Volunteer).filter(Volunteer.username == username).one()
+
+        schedule = session.query(Schedule).filter(Schedule.vol_id == volunteer.id,
+               Schedule.date == schedule_date, Schedule.role_id == role.id).one() 
+        
+        new_volunteer = session.query(Volunteer).filter(Volunteer.username == swap_name).one()
+        print(f'swapping {username} for {new_volunteer.username}...\n')
+        schedule.swappout_id = schedule.vol_id
+        schedule.vol_id = new_volunteer.id 
+        print(f'NOTE: For historical purposes swapout_id contains id of {username}')
+       
+        session.commit()
 
 
     def modify_schedule(username, input_date, role, changes):
 
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
-        role = session.query(Role).filter(Role.position == "greeter").first()
+        role = session.query(Role).filter(Role.position == role).first()
         volunteer=session.query(Volunteer).filter(Volunteer.username == username).one()
+
         schedule = session.query(Schedule).filter(Schedule.vol_id == volunteer.id,
-               Schedule.date == schedule_date,Schedule.role_id == role.id).one()
-        
+               Schedule.date == schedule_date, Schedule.role_id == role.id).one()
+                
         for key,value in changes.items():
             if key == "username":
-               user = session.query(Volunteer).filter(Volunteer.username == value )
-               setattr(schedule.vol_id,key,user.id)
+               user = session.query(Volunteer).filter(Volunteer.username == value ).one()
+               print(f'changing username from {username} to {value}...\n') 
+               schedule.vol_id=user.id
             elif key == "position":
-                role = session.query(Role).filter(Role.position == value )
-                setattr(schedule.role_id,key,role.id)
+                new_role = session.query(Role).filter(Role.position == value ).one()
+                print(f'changing role from {role.position} to {new_role.position}...\n') 
+                schedule.role_id=new_role.id
             else:
-                new_date = datetime.strptime(value, '%Y-%m-%d').date()
-                setattr(schedule.date,key,new_date)    
+                new_date = datetime.strptime(value,'%Y-%m-%d').date()
+                print(f'changing date from {schedule_date} to {new_date}...\n') 
+                schedule.date=new_date   
+             
         session.commit()
+        
+    def query_by_date(input_date):
+        schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
+        schedule = session.query(Schedule).filter(Schedule.date == schedule_date).all()
+        print(schedule)
 
+    def query_by_name(username):
+        volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()  
+        schedule = session.query(Schedule).filter(Schedule.vol_id == volunteer.id).all()    
+        
+        print("\nSamuel Martin:\n")
+        [print(schedule) for schedule in schedule]
+        
     def __repr__(self):
         return f'Schedule: {self.id}, ' + \
                f'Swapped: {self.swappout_id}, ' + \
@@ -198,4 +228,4 @@ class Schedule(Base):
                f'Role: {self.role_id}, ' + \
                f'Date: {self.date} '
              
-             
+Schedule.query_by_name("Samuel_Martin")             
