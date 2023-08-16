@@ -23,9 +23,9 @@ def add_user():
     x=True
     add_v = False
     while x:
-        print ("Welcome")
+        print ("Add Volunteer")
         user_input=input("\nHit x to quit,\n or input 'add' to Add Volunteer ")
-        if user_input== "x":
+        if user_input == "x":
             x=False
             #clear
         if user_input == "add":
@@ -127,7 +127,7 @@ def add_user():
                 if position == "quit":
                     break      
             
-        Volunteer.add_volunteer(fname, lname, email, phone, floater_result , week, position )
+                Volunteer.add_volunteer(fname, lname, email, phone, floater_result , week, position )
            
 @click.command()
 def start():
@@ -152,4 +152,5 @@ def start():
 
 if __name__ == '__main__':
     start()
+    
     
