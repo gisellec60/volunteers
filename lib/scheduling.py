@@ -13,12 +13,7 @@ engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 
-@click.group()
-def cli():
-    pass
-
-@click.command()
-def add_user():
+def add_volunteer():
     x=True
     add_v = False
     while x:
@@ -127,72 +122,48 @@ def add_user():
                     break      
             
                 Volunteer.add_volunteer(fname, lname, email, phone, floater_result , week, position )
-@click.command()
-@click.argument("username")
-def delete_user(username):
+
+def delete_volunteer():
     pass
 
-@click.command()
-@click.argument("username","changes")
-def modify_user(username):
+def modify_volunteer():
     pass
 
-@click.command()
-@click.argument("username","position","input_date")
-def add_to_schedule(username,position,input_date):
+def add_to_schedule():
     pass
 
-@click.command()
-@click.argument("username","input_date","role","changes")
-def modify_schedule(username, input_date, role, changes):
+def modify_schedule():
     pass
 
-@click.command()
-@click.argument("username","input_date","input_date")
-def delete_schedule(username, input_date):
+def delete_schedule():
     pass
 
-@click.command()
-@click.argument("username")
-def print_schedule_by_name(username):
+def print_schedule_by_name():
     pass
 
-@click.command()
-@click.argument("input_date")
-def print_schedule_by_date(input_date):
+def print_schedule_by_date():
     pass
 
-@click.command()
-@click.argument("username","input_date","role","swap_name")
-def swap_user(username, input_date, role, swap_name):
+def swap_user():
     pass
 
-@click.command()
-@click.argument("role")
-def add_role(role):
+def add_role():
     pass
 
-@click.command()
-@click.argument("role")
-def delete_role(role):
+def delete_role():
     pass
 
-cli.add_command(add_user)
-cli.add_command(delete_user)
-cli.add_command(modify_user)
-cli.add_command(add_to_schedule)
-cli.add_command(delete_schedule)
-cli.add_command(modify_schedule)
-cli.add_command(print_schedule_by_name)
-cli.add_command(print_schedule_by_date)
-cli.add_command(swap_user)
-cli.add_command(add_role)
-cli.add_command(delete_role)
-
-@click.command()
+banner = '''
+WELCOME TO The Scheduler
+*****************************
+'''
 def start():
     while True:
-        #clear
+        banner =  '''
+        WELCOME TO The Scheduler
+        *****************************
+         '''
+                
         print("Welcome to The Scheduler \n")
         print("1) Add Volunteer")
         print("2) Delete Volunteer")
@@ -205,12 +176,37 @@ def start():
         print("9) Volunteer Swap")
         print("10) Add Role")
         print("11) Delete Role")
-        
+        print("Q) Quit")
+       
+        user_input = input("What would you like to do? ")
+        user_input = user_input.strip()
 
-        user_input = input("Pick one")
-
+        if user_input == "1":
     
-   
+            add_volunteer()
+        elif user_input == "2":
+            delete_volunteer()
+        elif user_input == "3":
+            modify_volunteer()
+        elif user_input == "4":
+             add_to_schedule()
+        elif user_input == "5":
+            modify_schedule()
+        elif user_input == "6":
+            delete_schedule()
+        elif user_input == "7": 
+            print_schedule_by_date()
+        elif user_input == "8":
+            print_schedule_by_name()
+        elif user_input == "9":
+            swap_user()
+        elif user_input == "10":
+             add_role()
+        elif user_input == "11":
+             delete_role()  
+        elif user_input == t:
+            break
+
 
 if __name__ == '__main__':
     start()
