@@ -8,10 +8,15 @@ from model import  Volunteer, Role, Schedule, Validate
 import click
 import ipdb
 from datetime import datetime, date
+from simple_term_menu import TerminalMenu
+from prettycli import red, yellow
 
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
 session = Session()
+
+def clear_screen():
+        print("\n" * 40)
 
 def add_volunteer():
     x=True
@@ -21,7 +26,7 @@ def add_volunteer():
         user_input=input("\nHit x to quit,\n or input 'add' to Add Volunteer ")
         if user_input == "x":
             x=False
-            #clear
+            clear_screen()
         if user_input == "add":
             add_v = True
             while add_v:
@@ -154,17 +159,12 @@ def delete_role():
     pass
 
 banner = '''
-WELCOME TO The Scheduler
+  WELCOME TO The Scheduler
 *****************************
 '''
 def start():
     while True:
-        banner =  '''
-        WELCOME TO The Scheduler
-        *****************************
-         '''
-                
-        print("Welcome to The Scheduler \n")
+        print(banner)
         print("1) Add Volunteer")
         print("2) Delete Volunteer")
         print("3) Modify Volunteer")
@@ -178,11 +178,11 @@ def start():
         print("11) Delete Role")
         print("Q) Quit")
        
-        user_input = input("What would you like to do? ")
+        user_input = input("\nWhat would you like to do? ")
         user_input = user_input.strip()
 
         if user_input == "1":
-    
+            clear_screen() 
             add_volunteer()
         elif user_input == "2":
             delete_volunteer()
@@ -204,7 +204,7 @@ def start():
              add_role()
         elif user_input == "11":
              delete_role()  
-        elif user_input == t:
+        elif user_input == "q" or user_input == "Q":
             break
 
 
