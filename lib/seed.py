@@ -58,12 +58,11 @@ def create_roles():
         roles.append(role)
     return roles  
 
-
 def create_schedules():
     schedules = []
     for _ in range(50):
         schedule = Schedule(
-            date = fake.date_this_month(),
+            date = fake.date_this_month(after_today=True),
             swappout_id=""
         ) 
         session.add(schedule) 
@@ -71,6 +70,10 @@ def create_schedules():
         schedules.append(schedule)
     return schedules    
 
+def populate_swappout(schedules):
+    for i in range(2,34,5):
+        schedules[i].swappout_id = random.randint(1,34)
+        session.commit()     
 
 def relate_one_to_many(volunteers,roles,schedules):
     for schedule in schedules:
@@ -101,10 +104,12 @@ def relate_vol_pos(volunteers,roles):
                 volunteers[j].roles.append(role)
                 session.commit()
 
-# def populate_assign(volunteers):
-#     for volunteer in volunteers:
-#           if volunteer.schedules:
-#              volunteer.assigned = fake.boolean(chance_of_getting_true=15)
+def populate_assign(volunteers):
+     
+     for volunteer in volunteers:
+        if volunteer.schedules:
+            volunteer.assigned = "Yes"
+     session.commit()
 
 if __name__ == '__main__':
     delete_records()
@@ -114,3 +119,5 @@ if __name__ == '__main__':
     volunteers,roles,schedules = relate_one_to_many(volunteers,roles,schedules)
     floater_setting(volunteers)
     relate_vol_pos(volunteers,roles)
+    populate_assign(volunteers)
+    populate_swappout(schedules)

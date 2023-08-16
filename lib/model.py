@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # import sqlalchemy
 from sqlalchemy.orm import declarative_base, relationship, backref
-from sqlalchemy import Table, Boolean, ForeignKey, Column, Integer, String, MetaData, select
+from sqlalchemy import Table, Boolean, ForeignKey, Column, Integer, String, MetaData 
 from sqlalchemy.dialects.sqlite import DATE
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -222,6 +222,7 @@ class Schedule(Base):
         roles = session.query(Role).all()
                 
         print(f"\n{volunteer.first_name} {volunteer.last_name} \n")
+
         for schedule in volunteer.schedules:
             for role in roles:
                 if role.id == schedule.role_id:
@@ -239,4 +240,4 @@ class Schedule(Base):
                f'Role: {self.role_id}, ' + \
                f'Date: {self.date} '
              
-Schedule.query_by_name("Devin_Cruz")             
+# Schedule.query_by_name("Kayla_Diaz")             
