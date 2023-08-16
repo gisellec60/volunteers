@@ -6,6 +6,7 @@ from sqlalchemy.dialects.sqlite import DATE
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, date
+from validate import Validate
 
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
@@ -26,12 +27,13 @@ volunteer_role = Table (
      Column('role_id', ForeignKey('roles.id'))
 )
 
-class Volunteer(Base):
+class Volunteer(Base,Validate):
     __tablename__ = "volunteers"
     
     id = Column(Integer, primary_key=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
+
     email = Column(String, unique=True)
     phone = Column(String, nullable=False)
     username = Column(String, unique=True)
@@ -53,7 +55,8 @@ class Volunteer(Base):
                f'Phone: {self.phone}, ' + \
                f'Week : {self.week}, ' + \
                f'Assigned: {self.assigned}' 
-
+    
+      
     def add_volunteer(fname, lname, email, phone, floater, week, position="prayer"):
             username = f"{fname}_{lname}"
             assigned = "No"  
@@ -68,8 +71,6 @@ class Volunteer(Base):
                      week = week,
                      assigned = assigned
             )
-            
-            volunteer.roles.append(role)
             session.add(volunteer)
             session.commit()
             return volunteer
