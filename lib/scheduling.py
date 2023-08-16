@@ -13,12 +13,11 @@ engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 
+@click.group()
+def cli():
+    pass
 
-
-# @click.command()
-# @click.option('--count', default=1, help='Number of greetings.')
-# @click.option('--name', prompt='Your name', help='The person to greet.')
-
+@click.command()
 def add_user():
     x=True
     add_v = False
@@ -128,7 +127,68 @@ def add_user():
                     break      
             
                 Volunteer.add_volunteer(fname, lname, email, phone, floater_result , week, position )
-           
+@click.command()
+@click.argument("username")
+def delete_user(username):
+    pass
+
+@click.command()
+@click.argument("username","changes")
+def modify_user(username):
+    pass
+
+@click.command()
+@click.argument("username","position","input_date")
+def add_to_schedule(username,position,input_date):
+    pass
+
+@click.command()
+@click.argument("username","input_date","role","changes")
+def modify_schedule(username, input_date, role, changes):
+    pass
+
+@click.command()
+@click.argument("username","input_date","input_date")
+def delete_schedule(username, input_date):
+    pass
+
+@click.command()
+@click.argument("username")
+def print_schedule_by_name(username):
+    pass
+
+@click.command()
+@click.argument("input_date")
+def print_schedule_by_date(input_date):
+    pass
+
+@click.command()
+@click.argument("username","input_date","role","swap_name")
+def swap_user(username, input_date, role, swap_name):
+    pass
+
+@click.command()
+@click.argument("role")
+def add_role(role):
+    pass
+
+@click.command()
+@click.argument("role")
+def delete_role(role):
+    pass
+
+cli.add_command(add_user)
+cli.add_command(delete_user)
+cli.add_command(modify_user)
+cli.add_command(add_to_schedule)
+cli.add_command(delete_schedule)
+cli.add_command(modify_schedule)
+cli.add_command(print_schedule_by_name)
+cli.add_command(print_schedule_by_date)
+cli.add_command(swap_user)
+cli.add_command(add_role)
+cli.add_command(delete_role)
+
 @click.command()
 def start():
     while True:
@@ -143,6 +203,8 @@ def start():
         print("7) Print Shedule by Date")
         print("8) Print Schedule by Username")
         print("9) Volunteer Swap")
+        print("10) Add Role")
+        print("11) Delete Role")
         
 
         user_input = input("Pick one")
