@@ -68,7 +68,7 @@ Schedule:
   query_by_name
      name exist      
 
-      
+Maker sure to strip all spaces from input:  user_input = user_input.strip()
 
 
 

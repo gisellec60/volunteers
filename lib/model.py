@@ -72,6 +72,7 @@ class Volunteer(Base,Validate):
                      assigned = assigned
             )
             session.add(volunteer)
+            volunteer.roles.append(role)
             session.commit()
             return volunteer
    
@@ -93,6 +94,13 @@ class Volunteer(Base,Validate):
     def modify_volunteer(username, changes):
         volunteer=session.query(Volunteer).filter(Volunteer.username == username).one()
         for key,value in changes.items():
+            if key == "role":
+               role = session.query(Role).filter(Role.position == value).first()
+               volunteer.roles.append(role)
+            if key == 'old':
+               for role in volunteer.roles:
+                   if role.position == value:
+                      volunteer.roles.remove(role)
             setattr(volunteer,key,value)
         session.commit()
     
