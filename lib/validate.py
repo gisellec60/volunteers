@@ -16,7 +16,7 @@ class Validate():
     user_exist_error_message="username does not exist"
     floater_error_message="Floater value: True or False"
     week_error_message="Week must be an integer 1-5"
-    date_error_message=f"Please enter a valid date: 2023-08-17. Note date cannot be before {date.today()}"
+    date_error_message=f"Please enter a valid date: Note date cannot be before {date.today()}"
     
     def validate_name(name):
         name_pattern =  r"[A-z'-]+$"
@@ -59,20 +59,11 @@ class Validate():
         regex = re.compile(week_pattern)
         match = regex.fullmatch(week)
         return match
-
-    def validate_volunteer_exist(username):
-        valid_username = session.query(Volunteer).filter(Volunteer.username == username).one()
-        # except exc.SQLAlchemyError as e:
-        # print(type(e))
-
+    
     def validate_date(date):
-        schedule_date = datetime.strptime(date, '%Y-%m-%d').date()
-        schedule_date_pattern = r"^2023(0[89]|1[012])(0[1-9]|[12][0-9]|3[01])$"
+        # schedule_date = datetime.strptime(date, '%Y-%m-%d').date()
+        schedule_date_pattern = r"^2023-(0[1-9]|1[1,2])-(0[1-9]|[12][0-9]|3[01])$"
         regex = re.compile(schedule_date_pattern)
-        match = regex.fullmatch(schedule_date)
-        if match:
-            today = date.today()
-            if today >  schedule_date:
-                raise Exception("Date must be current or future")
-        else:
-            raise Exception()   
+        match = regex.fullmatch(date)
+        return match
+        

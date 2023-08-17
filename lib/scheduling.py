@@ -200,11 +200,9 @@ def modify_volunteer():
                                                 break
                                     else:
                                         break  
-                            
                             else: #if volunteer.roles = 1 
                                 for role in volunteer.roles:
                                     input_role = role.position
-                            
                             role_loop = True
                             while role_loop:
                                 value_input = input("Enter Change:  ")                    
@@ -221,13 +219,10 @@ def modify_volunteer():
                                     changes[key_input] = value_input
                                     changes["old"] = input_role
                                     role_loop = False
-                                    
-
                         else: # if key not = role
                             value_input = input("Enter Change:  ")                    
                             value_input = value_input.strip()
                             changes[key_input] = value_input 
-
                         user_continue = input("\nMaking another change? Y/N ") 
                         if user_continue.upper() in ans:
                             if user_continue.upper() == "N":
@@ -235,7 +230,6 @@ def modify_volunteer():
                                 x=False
                                 clear_screen()
                                 break
-
                     else:  #if key_input not in input filed
                         user_continue=input(f'\n{key_input} is not a valid field.\nWould you like to continue? Y/N ')
                         if user_continue.upper() in ans:
@@ -248,7 +242,6 @@ def modify_volunteer():
                 if key.lower() == "floater":
                     new_value = True if value == 'Y' else False 
                     changes[key]=new_value
-                    print(changes)
                 print(f"\nchanging {key} to {value}...")  
                 Volunteer.modify_volunteer(username,changes)   
                 print("Change was sucessful")
@@ -266,11 +259,82 @@ def modify_volunteer():
                         x=False
                         clear_screen()
                         break
-        
-      
 
 def add_to_schedule():
-    pass
+    clear_screen() 
+    print(add_schedule_banner)
+    ans=["Y","N"]
+    valid_roles = ["greeter", "usher","welcome table","prayer"]
+    x=True
+    sched_loop = False
+    user_roles=[]
+    while x:
+        username = input("Enter username or X to quit: ")
+        if username.upper() == "X":
+           clear_screen() 
+           break
+        else:
+            sched_loop = True
+            while sched_loop:
+                user_exist = session.query(Volunteer).filter(Volunteer.username == username).first()  
+                if user_exist:
+                    role_input = input("Enter role: ")
+                    role_input = role_input.strip()
+                    if role_input in valid_roles:
+                       volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()
+                       for role in volunteer.roles:
+                           user_roles.append(role.position)
+                    else:  
+                        role_input = input(f"{role_input} is not a valid role. Would you like to continue ? Y/N ") 
+                        role_input = role_input.strip()
+                        if role_input.upper() in ans:
+                            if role_input.upper() == "N":
+                                x=False
+                                clear_screen()
+                                break
+                    if role_input in user_roles:  
+                        input_date = input("Enter date: YYY-MM-DD: ")
+                        input_date = input_date.strip()
+                        valid_date = Validate.validate_date(input_date) 
+                        if valid_date == None:
+                            print(Validate.date_error_message)
+                            user_continue=input('Would you like to continue? Y/N ')
+                            if user_continue.upper() in ans:
+                                if user_continue == "N" or user_continue == "n":
+                                    sched_loop=False
+                                    clear_screen()
+                                    break
+                        else:
+                            print("\nSchedule updating...")
+                            Schedule.add_to_schedule(username, role_input, input_date)   
+                            print(f"Adding {username} as a {role_input} to the schedule for {input_date}")
+                            user_input = input("x to exit: ") 
+                            user_input = user_input.strip() 
+                            if user_input.lower() == "x" :
+                                sched_loop=False
+                                x=False
+                                clear_screen()
+                                break
+                    else:
+                        user_input = input(f"{username} does volunteer as a {role_input}. Would you like to enter another role? Y/N ")  
+                        user_input = user_input.strip()
+                        if user_input.upper() in ans:
+                            if user_input.upper() == "N":
+                                x=False
+                                clear_screen()
+                                break
+                        else:
+                            break
+                else: #if username is valid
+                    user_input = input(f'{username} does not exist. Please check spelling. Would you like to continue ?  Y/N  ')
+                    user_input = user_input.strip()
+                    if user_input.upper() in ans:
+                        if user_input.upper() == "N":
+                            x=False
+                            clear_screen()
+                            break
+                        else:
+                            break
 
 def modify_schedule():
     pass
@@ -308,10 +372,11 @@ modify_banner = '''
      Modify Volunteer
    /   /    /     /    /  
 '''
-
-
-
-
+add_schedule_banner = '''
+    /   /    /     /    / 
+     Add Schedule
+   /   /    /     /    /  
+'''
 
 def start():
     while True:
