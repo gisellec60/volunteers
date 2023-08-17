@@ -274,16 +274,50 @@ def add_to_schedule():
            clear_screen() 
            break
         else:
-            sched_loop = True
-            while sched_loop:
-                user_exist = session.query(Volunteer).filter(Volunteer.username == username).first()  
-                if user_exist:
+            user_exist = session.query(Volunteer).filter(Volunteer.username == username).first()
+            if user_exist:
+                sched_loop = True
+                while sched_loop:
                     role_input = input("Enter role: ")
                     role_input = role_input.strip()
                     if role_input in valid_roles:
-                       volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()
-                       for role in volunteer.roles:
-                           user_roles.append(role.position)
+                        volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()
+                        for role in volunteer.roles:
+                            user_roles.append(role.position)
+                        if role_input in user_roles:  
+                            input_date = input("Enter date: YYY-MM-DD: ")
+                            input_date = input_date.strip()
+                            valid_date = Validate.validate_date(input_date) 
+                            if valid_date == None:
+                                print(Validate.date_error_message)
+                                user_continue=input('Would you like to continue? Y/N ')
+                                if user_continue.upper() in ans:
+                                    if user_continue == "N" or user_continue == "n":
+                                        sched_loop=False
+                                        x=False
+                                        clear_screen()
+                                        break
+                            else:
+                                print("\nSchedule updating...")
+                                Schedule.add_to_schedule(username, role_input, input_date)   
+                                print(f"Adding {username} as a {role_input} to the schedule for {input_date}")
+                                user_input = input("x to exit: ") 
+                                user_input = user_input.strip() 
+                                if user_input.lower() == "x" :
+                                    sched_loop=False
+                                    x=False
+                                    clear_screen()
+                                    break    
+                        else:
+                            user_input = input(f"{username} does not volunteer as a {role_input}. Would you like to enter another role? Y/N ")  
+                            user_input = user_input.strip()
+                            if user_input.upper() in ans:
+                                if user_input.upper() == "N":
+                                    x=False
+                                    clear_screen()
+                                    break
+                                else:
+                                    break
                     else:  
                         role_input = input(f"{role_input} is not a valid role. Would you like to continue ? Y/N ") 
                         role_input = role_input.strip()
@@ -292,49 +326,17 @@ def add_to_schedule():
                                 x=False
                                 clear_screen()
                                 break
-                    if role_input in user_roles:  
-                        input_date = input("Enter date: YYY-MM-DD: ")
-                        input_date = input_date.strip()
-                        valid_date = Validate.validate_date(input_date) 
-                        if valid_date == None:
-                            print(Validate.date_error_message)
-                            user_continue=input('Would you like to continue? Y/N ')
-                            if user_continue.upper() in ans:
-                                if user_continue == "N" or user_continue == "n":
-                                    sched_loop=False
-                                    clear_screen()
-                                    break
-                        else:
-                            print("\nSchedule updating...")
-                            Schedule.add_to_schedule(username, role_input, input_date)   
-                            print(f"Adding {username} as a {role_input} to the schedule for {input_date}")
-                            user_input = input("x to exit: ") 
-                            user_input = user_input.strip() 
-                            if user_input.lower() == "x" :
-                                sched_loop=False
-                                x=False
-                                clear_screen()
+                            else:
                                 break
-                    else:
-                        user_input = input(f"{username} does volunteer as a {role_input}. Would you like to enter another role? Y/N ")  
-                        user_input = user_input.strip()
-                        if user_input.upper() in ans:
-                            if user_input.upper() == "N":
-                                x=False
-                                clear_screen()
-                                break
-                        else:
-                            break
-                else: #if username is valid
-                    user_input = input(f'{username} does not exist. Please check spelling. Would you like to continue ?  Y/N  ')
-                    user_input = user_input.strip()
-                    if user_input.upper() in ans:
-                        if user_input.upper() == "N":
-                            x=False
-                            clear_screen()
-                            break
-                        else:
-                            break
+                        
+            else: #if username is valid
+                user_input = input(f'{username} does not exist. Please check spelling. Would you like to continue ?  Y/N  ')
+                user_input = user_input.strip()
+                if user_input.upper() in ans:
+                    if user_input.upper() == "N":
+                        x=False
+                        clear_screen()
+                        break
 
 def modify_schedule():
     pass
