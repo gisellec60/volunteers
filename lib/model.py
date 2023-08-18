@@ -176,7 +176,7 @@ class Schedule(Base):
         [session.delete(schedule) for schedule in volunteer.schedules if schedule.date == schedule_date]
         if(len(volunteer.schedules) == 1 ):
             volunteer.assigned = "No"
-        print(f"Removing {Volunteer.first_name} {Volunteer.last_name} from the schedule for {input_date} ")
+        print(f"Removing {volunteer.first_name} {volunteer.last_name} from the schedule for {input_date} ")
         session.commit()
 
     def swap(username, input_date, role, swap_name):
@@ -225,10 +225,9 @@ class Schedule(Base):
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
         schedules = session.query(Schedule).filter(Schedule.date == schedule_date).all()
 
-        print (f"\n input_date")
+        print (f"\n {input_date}")
         for schedule in schedules:
-            print (f"schedule.volunteer")
-        
+            print (f"{schedule.volunteer}")
 
     def query_by_name(username):
         volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()  
