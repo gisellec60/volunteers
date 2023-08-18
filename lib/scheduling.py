@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
+
 from model import  Volunteer, Role, Schedule, Validate
 import click
 import ipdb
@@ -17,7 +18,7 @@ session = Session()
 
 def clear_screen():
         print("\n" * 40)
-
+ans=["Y","N"]
 def add_volunteer():
     x=True
     add_v = False
@@ -348,12 +349,14 @@ def print_schedule_by_name():
     x=True
     while x:
         username = input("Enter username: ")
-        volunteer = Validate.user_exist(username)
+        volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
         if volunteer:
-            Schedule.query_by_name(volunteer)
-            x=False
-            clear_screen()
-            break
+            Schedule.query_by_name(username)
+            user_input = input("x to exit: ") 
+            user_input = user_input.strip() 
+            if user_input.lower() == "x" :
+                clear_screen()
+                break    
         else:
             user_continue = input(f"{username} does not exist.  Would you like to enter another username? Y/N ")    
             if user_continue.upper() in ans:
