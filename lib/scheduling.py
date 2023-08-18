@@ -346,9 +346,14 @@ def delete_schedule():
     pass
 
 def print_schedule_by_name():
+    print(query_by_name_banner)
     x=True
     while x:
-        username = input("Enter username: ")
+        username = input("Enter username or x to exit: ")
+        if username.upper() == "X":
+           clear_screen() 
+           break
+
         volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
         if volunteer:
             Schedule.query_by_name(username)
@@ -364,12 +369,29 @@ def print_schedule_by_name():
                     x=False
                     clear_screen()
                     break
-                else:
-                    break
-
+                
 
 def print_schedule_by_date():
-    pass
+    print(query_by_name_banner)
+    x=True
+    while x:
+        date_input = input("Enter a valid date YYY-MM-DD: ")
+        valid_date = Validate.validate_date(date_input)
+        if valid_date:
+            Schedule.query_by_date(date_input)
+            user_input = input("x to exit: ") 
+            user_input = user_input.strip() 
+            if user_input.lower() == "x" :
+                clear_screen()
+                break    
+        else:
+            user_continue = input("Invalid date. Would you like to re-enter the date Y/N ? ")
+            if user_continue.upper() in ans:
+                if user_continue.upper() == "N":
+                    x=False
+                    clear_screen()
+                    break
+
 
 def swap_user():
     pass
@@ -398,6 +420,12 @@ modify_banner = '''
 add_schedule_banner = '''
     /   /    /     /    / 
      Add Schedule
+   /   /    /     /    /  
+'''
+
+query_by_name_banner = '''
+    /   /    /     /    / 
+   Query Schedule by Name
    /   /    /     /    /  
 '''
 
@@ -437,6 +465,7 @@ def start():
         elif user_input == "7": 
             print_schedule_by_date()
         elif user_input == "8":
+            clear_screen()
             print_schedule_by_name()
         elif user_input == "9":
             swap_user()
