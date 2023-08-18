@@ -70,7 +70,8 @@ Schedule:
 
 Maker sure to strip all spaces from input:  user_input = user_input.strip()
 
-
+pipenv install alembic sqlalchemy==1.4.41
+pipenv install faker
 
 
   
