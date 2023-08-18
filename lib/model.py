@@ -172,10 +172,11 @@ class Schedule(Base):
     def delete_schedule(username, input_date):
 
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
-        volunteer = session.query(Volunteer).filter(Volunteer.username == username).one()
+        volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()
         [session.delete(schedule) for schedule in volunteer.schedules if schedule.date == schedule_date]
         if(len(volunteer.schedules) == 1 ):
             volunteer.assigned = "No"
+        print(f"Removing {Volunteer.first_name} {Volunteer.last_name} from the schedule for {input_date} ")
         session.commit()
 
     def swap(username, input_date, role, swap_name):
@@ -198,24 +199,25 @@ class Schedule(Base):
 
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
         role = session.query(Role).filter(Role.position == role).first()
-        volunteer=session.query(Volunteer).filter(Volunteer.username == username).one()
+        volunteer=session.query(Volunteer).filter(Volunteer.username == username).first()
 
         schedule = session.query(Schedule).filter(Schedule.vol_id == volunteer.id,
-               Schedule.date == schedule_date, Schedule.role_id == role.id).one()
+               Schedule.date == schedule_date, Schedule.role_id == role.id).first()
                 
         for key,value in changes.items():
             if key == "username":
-               user = session.query(Volunteer).filter(Volunteer.username == value ).one()
+               user = session.query(Volunteer).filter(Volunteer.username == value ).first()
                print(f'changing username from {username} to {value}...\n') 
                schedule.vol_id=user.id
-            elif key == "position":
-                new_role = session.query(Role).filter(Role.position == value ).one()
+            elif key == "role":
+                new_role = session.query(Role).filter(Role.position == value ).first()
                 print(f'changing role from {role.position} to {new_role.position}...\n') 
                 schedule.role_id=new_role.id
             else:
                 new_date = datetime.strptime(value,'%Y-%m-%d').date()
                 print(f'changing date from {schedule_date} to {new_date}...\n') 
                 schedule.date=new_date   
+             
              
         session.commit()
         

@@ -326,30 +326,24 @@ def add_to_schedule():
                     else:  
                         role_input = input(f"{role_input} is not a valid role. Would you like to continue ? Y/N ") 
                         role_input = role_input.strip()
-                        if role_input.upper() in ans:
-                            if role_input.upper() == "N":
-                                x=False
-                                clear_screen()
-                                break
-                            else:
-                                break
-                        
+                        if role_input.upper() == "N":
+                            x=False
+                            clear_screen()
+                            break
+                        else:
+                            break
             else: #if username is valid
                 user_input = input(f'{username} does not exist. Please check spelling. Would you like to continue ?  Y/N  ')
                 user_input = user_input.strip()
-                if user_input.upper() in ans:
-                    if user_input.upper() == "N":
-                        x=False
-                        clear_screen()
-                        break
+                if user_input.upper() == "N":
+                    x=False
+                    clear_screen()
+                    break
 
 def modify_schedule():
     print(modify_schedule_banner)
     changes = {}
-    x=True
     user_loop = True
-    # while x:
-
     while user_loop:
         username = input("Enter usersname for current schedule or x to quit: ")
         username = username.strip()
@@ -404,15 +398,14 @@ def modify_schedule():
             else:
                 date_input = input("Would you like to change the scheduled date Y/N? ")
                 date_input = date_input.strip()
-                if date_input.upper() in ans:
-                    if date_input.upper() == "N":
-                        date_loop = False
+                if date_input.upper() == "N":
+                     date_loop = False
                 else:
                     change_date = input("Enter valid date YYYY-MM-DD:")
                     change_date = change_date.strip()
                     valid_date = Validate.validate_date(change_date) 
                     if valid_date:
-                        changes["date"]=valid_date
+                        changes["date"]=change_date
                         date_loop = False
                     else:
                         user_continue = input(f"{change_date} is not a valid date. Would you like to enter another date Y/N? ")
@@ -429,7 +422,6 @@ def modify_schedule():
                 
         role_loop = True
         while role_loop:
-            print("while loop starting")
             input_role = input("Enter the scheduled role: ") 
             input_role = input_role.strip()
             valid_role = Validate.validate_role(input_role)
@@ -468,13 +460,56 @@ def modify_schedule():
                                     break
                                 else:
                                     date_loop = False
-    print("this is outside loop", changes) 
-    # print(username, input_date, input_role)                                  
-    # Schedule.modify_schedule(username, input_date, input_role,changes) 
+    print("the next thing",changes)                                  
+    Schedule.modify_schedule(username, input_date, input_role,changes) 
+    user_input = input("x to exit: ") 
+    user_input = user_input.strip() 
+    if user_input.lower() == "x" :
+       clear_screen()
 
 
 def delete_schedule():
-    pass
+    x=True
+    while x:
+        username = input("Enter usersname for current schedule or x to quit: ")
+        username = username.strip()
+        volunteer = user_exist(username)
+        if not volunteer:
+            user_continue = input(f"{username} does not exit. Would you like to enter another username Y/N? ")
+            if user_continue.upper() == "N":
+                x=False
+                clear_screen()
+                break
+            else:
+                continue
+        else:
+            date_loop = True
+            while date_loop:
+                input_date = input("Enter valid date YYYY-MM-DD:")
+                valid_date = Validate.validate_date(input_date) 
+                if valid_date:
+                    Schedule.delete_schedule(username,input_date)
+                    user_input = input("x to exit: ") 
+                    user_input = user_input.strip() 
+                    if user_input.lower() == "x" :
+                       clear_screen()
+                       date_loop=True
+                       x = False
+                       break
+                    else:
+                        clear_screen()
+                        date_loop=True
+                        x = False
+                        break
+                else:
+                    user_continue = input(f"{input_date} is not a valid date. Would you like to enter another date Y/N? ")
+                    if user_continue.upper() == "N":
+                        date_loop = False
+                        x = False
+                        clear_screen()
+                        break
+                    else:
+                        continue  
 
 def print_schedule_by_name():
     print(query_by_name_banner)
@@ -516,11 +551,10 @@ def print_schedule_by_date():
                 break    
         else:
             user_continue = input("Invalid date. Would you like to re-enter the date Y/N ? ")
-            if user_continue.upper() in ans:
-                if user_continue.upper() == "N":
-                    x=False
-                    clear_screen()
-                    break
+            if user_continue.upper() == "N":
+                x=False
+                clear_screen()
+                break
 
 
 def swap_user():
@@ -598,6 +632,7 @@ def start():
             clear_screen()
             modify_schedule()
         elif user_input == "6":
+            clear_screen() 
             delete_schedule()
         elif user_input == "7": 
             print_schedule_by_date()
