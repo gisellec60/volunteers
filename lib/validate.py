@@ -38,7 +38,7 @@ class Validate():
         match = regex.fullmatch(phone)
         return match
             
-    def validate_role(role):
+    def validate_role_input(role):
         role_pattern =  r"[A-z]+$" 
         regex = re.compile(role_pattern)   
         match = regex.fullmatch(role)  

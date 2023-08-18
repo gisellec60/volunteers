@@ -194,7 +194,7 @@ class Schedule(Base):
        
         session.commit()
 
-    def modify_schedule(username, input_date,  changes):
+    def modify_schedule(username, input_date, role, changes):
 
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
         role = session.query(Role).filter(Role.position == role).first()
@@ -221,8 +221,12 @@ class Schedule(Base):
         
     def query_by_date(input_date):
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
-        schedule = session.query(Schedule).filter(Schedule.date == schedule_date).all()
-        print(schedule)
+        schedules = session.query(Schedule).filter(Schedule.date == schedule_date).all()
+
+        print (f"\n input_date")
+        for schedule in schedules:
+            print (f"schedule.volunteer")
+        
 
     def query_by_name(username):
         volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()  

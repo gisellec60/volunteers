@@ -16,6 +16,10 @@ engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 
+def user_exist(username):
+        volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
+        return volunteer
+
 def clear_screen():
         print("\n" * 40)
 ans=["Y","N"]
@@ -340,7 +344,126 @@ def add_to_schedule():
                         break
 
 def modify_schedule():
-    pass
+    changes = {}
+    x=True
+    while x:
+
+        user_loop = True
+        while user_loop:
+            username = input("Enter usersname for current schedule or x to quit: ")
+            username = username.strip()
+            volunteer = user_exist(username)
+            if not volunteer:
+                user_continue = input(f"{username} does not exit. Would you like to enter another username Y/N? ")
+                if user_continue.upper() in ans:
+                    if user_continue.upper() == "N":
+                        x=False
+                        clear_screen()
+                        break
+            else:
+                user_input = input("Would you like to change this volunteer Y/N ? ")
+                user_input = user_input.strip()
+                if user_input.upper() in ans:
+                    if user_input.upper() == "N":
+                        break
+
+                    else:
+                        change_user = input("Enter username: ")
+                        change_user = change_user.strip()
+                        valid_user = user_exist(change_user)
+                        if valid_user:
+                            changes["username"]=valid_user
+                        else:
+                            user_continue = input(f"{valid_user} does not exit. Would you like to enter another username Y/N? ")
+                            if user_continue.upper() in ans:
+                                if user_continue.upper() == "N":
+                                    user_quit = input("Would like to continue Y/N? ")
+                                    if user_quit.upper() == "N":
+                                        user_loop = False
+                                        x = False
+                                        clear_screen()
+                                        break
+                                    else:
+                                        user_loop = False
+
+            date_loop = True
+            while date_loop:
+                input_date = input("Enter valid date YYYY-MM-DD: ")
+                input_date = input_date.strip()
+                valid_date = Validate.validate_date(input_date) 
+                if not valid_date:
+                    user_continue = input(f"{input_date} is not a valid date. Would you like to enter another date Y/N? ")
+                    if user_continue.upper() in ans:
+                        if user_continue.upper() == "N":
+                            date_loop = True
+                            x=False
+                            clear_screen()
+                            break
+                else:
+                    date_input = input("Would you like to change the date Y/N? ")
+                    date_input = date_input.strip()
+                    if date_input.upper() in ans:
+                        if date_input.upper() == "N":
+                           break
+                    else:
+                        change_date = input("Enter valid date YYYY-MM-DD:")
+                        change_date = change_date.strip()
+                        valid_date = Validate.validate_date(change_date) 
+                        if valid_date:
+                           changes["date"]=valid_date
+                        else:
+                           user_continue = input(f"{change_date} is not a valid date. Would you like to enter another date Y/N? ")
+                           if user_continue.upper() in ans:
+                              if user_continue.upper() == "N":
+                                    user_quit = input("Would like to continue Y/N? ")
+                                    if user_quit.upper() == "N":
+                                        date_loop = False
+                                        x = False
+                                        clear_screen()
+                                        break
+                                    else:
+                                        date_loop = False
+                 
+            role_loop = True
+            while role_loop:
+                input_role = input("Enter valid role: ") 
+                input_role = input_role.strip()
+                valid_role = Validate.validate_role(input_role)
+                if not valid_role:
+                    user_continue = input(f"{input_role} is not a valid role. Would you like to enter another role Y/N? ")
+                    if user_continue.upper() in ans:
+                        if user_continue.upper() == "N":
+                            x=False
+                            clear_screen()
+                            break
+                else:
+                   role_input = input("Would you like to change the role Y/N ?")
+                   role_input = role_input.strip()
+                   if role_input.upper() in ans:
+                      if role_input.upper() == "N":
+                         break
+                      else:
+                          change_role = input("Enter a valid role: ")    
+                          change_role = change_role.strip()  
+                          valid_change_role = Validate.validate_role(change_role)
+                          if valid_change_role:
+                              changes['role'] = change_role
+                          else:  
+                              user_continue = input(f"{change_role} is not a valid role. Would you like to enter another role Y/N? ")
+                              if user_continue.upper() in ans:
+                                  if user_continue.upper() == "N":
+                                      user_quit = input("Would like to continue Y/N? ")
+                                      if user_quit.upper() == "N":
+                                           date_loop = False
+                                           x = False
+                                           clear_screen()
+                                           break
+                                      else:
+                                           date_loop = False
+        print(changes) 
+        print(username, input_date, input_role)                                  
+        # Schedule.modify_schedule(username, input_date, input_role,changes) 
+
 
 def delete_schedule():
     pass
@@ -353,7 +476,6 @@ def print_schedule_by_name():
         if username.upper() == "X":
            clear_screen() 
            break
-
         volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
         if volunteer:
             Schedule.query_by_name(username)
