@@ -2,6 +2,7 @@ from datetime import datetime, date
 import re
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+from model import  Volunteer, Role, Schedule
 
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
@@ -35,17 +36,37 @@ class Validate():
         regex = re.compile(phone_pattern)
         match = regex.fullmatch(phone)
         return match
-    
-    def validate_role_exist(role):
-        valid_role = session.query(Role).filter(Role.position == role).one()
-        # except exc.SQLAlchemyError as e:
-        # print(type(e))
-    
+            
     def validate_role(role):
         role_pattern =  r"[A-z]+$" 
         regex = re.compile(role_pattern)   
         match = regex.fullmatch(role)  
         return match 
+
+    def validate_role(role):
+        user_roles = ["greeter","usher","welcome table", "prayer"]   
+        if role in user_roles:
+            return True
+           
+    def list_volunteer_roles(username,role):
+        role_list=[]
+        volunteer = session.query(Volunteer).filter(Volunteer.username == username)
+        for role in volunteer.roles:
+           role_list.append(role.position)
+        return role_list        
+    
+    def list_volunteer_schedules(username,date):
+        schedule_date = datetime.strptime(date, '%Y-%m-%d').date()
+        schedule_list = []
+        volunteer = session.query(Volunteer).filter(Volunteer.username == username)
+        for schedule in volunteer.schedules:
+            if schedule.date == schedule_date:
+               schedule_list.append(schedule)
+        return schedule_list
+     
+    def user_exist(username):
+        volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
+        return volunteer
     
     def validate_floater(floater):
         floater_is_good = "Yes"

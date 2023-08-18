@@ -345,7 +345,25 @@ def delete_schedule():
     pass
 
 def print_schedule_by_name():
-    pass
+    x=True
+    while x:
+        username = input("Enter username: ")
+        volunteer = Validate.user_exist(username)
+        if volunteer:
+            Schedule.query_by_name(volunteer)
+            x=False
+            clear_screen()
+            break
+        else:
+            user_continue = input(f"{username} does not exist.  Would you like to enter another username? Y/N ")    
+            if user_continue.upper() in ans:
+                if user_continue.upper() == "N":
+                    x=False
+                    clear_screen()
+                    break
+                else:
+                    break
+
 
 def print_schedule_by_date():
     pass

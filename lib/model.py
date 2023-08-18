@@ -194,8 +194,7 @@ class Schedule(Base):
        
         session.commit()
 
-
-    def modify_schedule(username, input_date, role, changes):
+    def modify_schedule(username, input_date,  changes):
 
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
         role = session.query(Role).filter(Role.position == role).first()
