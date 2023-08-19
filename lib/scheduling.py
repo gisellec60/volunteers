@@ -187,110 +187,120 @@ def delete_volunteer():
 def modify_volunteer():
     clear_screen() 
     print(modify_banner)
-    valid_fields = ["first_name", "last_name", "email", "phone","floater","week","role"]
-    valid_roles = ["greeter", "usher","welcome table","prayer"]
     x=True
     changes={}
-    ans=["Y","N"]
     while x:
         username = input("Enter username or X to quit: ")
         if username.upper() == "X":
            clear_screen() 
            break
         else:
-            user_exist = session.query(Volunteer).filter(Volunteer.username == username).first()  
-           
-            if user_exist:
-                dic_loop = True
-                while dic_loop:
-
+            volunteer = user_exist(username)
+            if volunteer:
+                change_loop = True
+                while change_loop:
                     key_input = input("\nwhat would you like to change (Enter one) ? \n[first_name, last_name, email, phone,floater,week,role] ")
                     key_input = key_input.strip()
+                    valid_key_input = Validate.validate_fields
                     
-                    if key_input in valid_fields:
+                    #because role is linked through a relational table it's handled differently
+                    if valid_key_input:
                         if key_input == "role":
-                            volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()
-                            if (len(volunteer.roles)) > 1 :
-                                print("\n")
-                                user_roles=[]
-                                for role in volunteer.roles:
-                                    print(role.position)
-                                    user_roles.append(role.position)
-                                role_loop = True
-                                while role_loop:
-                                    input_role = input("\nEnter role to change: ")
-                                    input_role = input_role.strip()
-                                    if input_role not in user_roles:
-                                       user_continue=input(f'\n{input_role} is not one of the roles.\nWould you like to continue? Y/N ')
-                                       user_continue = user_continue.strip()
-                                       if user_continue.upper() in ans:
-                                           if user_continue.upper() == "N" :
-                                                x=False
-                                                dic_loop = False
-                                                clear_screen()
-                                                break
-                                    else:
-                                        break  
-                            else: #if volunteer.roles = 1 
-                                for role in volunteer.roles:
-                                    input_role = role.position
                             role_loop = True
                             while role_loop:
+                                if(len(volunteer.roles)) > 1 :
+                                    print("\n")
+                                    user_roles=[]
+                                    for role in volunteer.roles:
+                                        print(role.position)
+                                        user_roles.append(role.position)
+                                    input_role = input("\nEnter role to change: ")
+                                    input_role = input_role.strip()
+                                    valid_roles = valid_roles(input_role)
+                                    if not valid_roles:
+                                        user_continue=input(f'\n{input_role} is not one of the roles.\nWould you like to continue? Y/N ')
+                                        user_continue = user_continue.strip()
+                                        if user_continue.upper() == "N" :
+                                            x=False
+                                            change_loop = False
+                                            role_loop = False
+                                            clear_screen()
+                                            break
+                                        else:
+                                            continue  
+                                else: #if volunteer.roles = 1 
+                                    for role in volunteer.roles:
+                                        input_role = role.position
+
                                 value_input = input("Enter Change:  ")                    
                                 value_input = value_input.strip()
                                 if value_input not in valid_roles:
                                     user_continue=input(f'\n{value_input} is not a valid role.\nWould you like to continue? Y/N ')
-                                    if user_continue.upper() in ans:
-                                        if user_continue.upper() == "N" :
-                                            x=False
-                                            dic_loop=False
-                                            clear_screen()
-                                            break
-                                else:
+                                    if user_continue.upper() == "N" :
+                                        x=False
+                                        role_loop=False
+                                        change_loop = False
+                                        clear_screen()
+                                        break
+                                    else:
+                                        continue
+                                else:    
                                     changes[key_input] = value_input
                                     changes["old"] = input_role
                                     role_loop = False
+
                         else: # if key not = role
                             value_input = input("Enter Change:  ")                    
                             value_input = value_input.strip()
                             changes[key_input] = value_input 
+
                         user_continue = input("\nMaking another change? Y/N ") 
-                        if user_continue.upper() in ans:
-                            if user_continue.upper() == "N":
-                                print ("do you get here")
-                                x=False
-                                clear_screen()
-                                break
+                        if user_continue.upper() == "N":
+                            x=False
+                            change_loop = False
+                            clear_screen()
+                            break
+                        else:
+                            continue
+
                     else:  #if key_input not in input filed
                         user_continue=input(f'\n{key_input} is not a valid field.\nWould you like to continue? Y/N ')
-                        if user_continue.upper() in ans:
-                            if user_continue == "N" or user_continue == "n":
-                                x=False
-                                clear_screen()
-                                break
-          
-            for key,value in changes.items():
-                if key.lower() == "floater":
-                    new_value = True if value == 'Y' else False 
-                    changes[key]=new_value
-                print(f"\nchanging {key} to {value}...")  
+                        if user_continue == "N" or user_continue == "n":
+                            change_loop = False
+                            x=False
+                            clear_screen()
+                            break
+                        else:
+                             continue
+                        
+                for key,value in changes.items():
+                    if key.lower() == "floater":
+                        new_value = True if value == 'Y' else False 
+                        changes[key]=new_value
+                        print(f"\nchanging {key} to {value}...") 
+                         
                 Volunteer.modify_volunteer(username,changes)   
                 print("Change was sucessful")
-                # user_input = input("x to exit: ") 
-                # user_input = user_input.strip() 
                 user_input = Validate.keep_output_on_screen()
                 if user_input.lower() == "x" :
+                    x=True
+                    clear_screen() 
+                    break
+                else:
+                    x=True
                     clear_screen() 
                     break
 
             else: #if username is valid
                 user_input = input(f'{username} does not exist. Please check spelling. Would you like to continue ?  Y/N  ')
                 user_input = user_input.strip()
-                if user_input.upper() in ans:
-                    if user_input.upper() == "N":
-                        x=False
-                        clear_screen()
-                        break
+                if user_input.upper() == "N":
+                    change_loop = False
+                    x=False
+                    clear_screen()
+                    break
+                else:
+                    continue
 
 def add_to_schedule():
     clear_screen() 
