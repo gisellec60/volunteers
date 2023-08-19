@@ -94,9 +94,9 @@ class Validate():
         return match
     
     def validate_date(date):
-        # schedule_date = datetime.strptime(date, '%Y-%m-%d').date()
         # schedule_date_pattern = r"^202[3-9]-(0[1-9]|1[1,2])-(0[1-9]|[12][0-9]|3[01])$"
-        schedule_date_pattern = r"^202[3-9]-(0[9,4,6]|[11])-(0[1-9]|[12][0-9]|3[0])|^202[3-9]-(0[1,3,5,7,8]|1[0,2])-(0[1-9]|[1,2][0-9]|3[1])$"
+        # schedule_date_pattern = r"^202[3-9]-(0[9,4,6]|[11])-(0[1-9]|[12][0-9]|3[0])|^202[3-9]-(0[1,3,5,7,8]|1[0,2])-(0[1-9]|[1,2][0-9]|3[1])$"
+        schedule_date_pattern = r"^202[3-9]-(0[9,4,6]|1[1])-(0[1-9]|[1,2][0-9]|3[0])|^202[3-9]-(0[1,3,5,7,8]|1[0,2])-(0[1-9]|[1,2][0-9]|3[1])$"
         regex = re.compile(schedule_date_pattern)
         match = regex.fullmatch(date)
         return match

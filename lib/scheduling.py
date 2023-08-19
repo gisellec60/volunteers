@@ -305,47 +305,43 @@ def modify_volunteer():
 def add_to_schedule():
     clear_screen() 
     print(add_schedule_banner)
-    ans=["Y","N"]
     x=True
     sched_loop = False
-    user_roles=[]
     while x:
         username = input("Enter username or X to quit: ")
         if username.upper() == "X":
            clear_screen() 
            break
         else:
-            user_exist = session.query(Volunteer).filter(Volunteer.username == username).first()
-            if user_exist:
+            volunteer = user_exist(username)
+            if volunteer:
                 sched_loop = True
                 while sched_loop:
                     role_input = input("Enter role: ")
                     role_input = role_input.strip()
-                    role_valid = Validate.validate_role()
+                    role_valid = Validate.validate_role(role_input)
                     if role_valid: 
-                        volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()
+                        role_found = False
                         for role in volunteer.roles:
-                            user_roles.append(role.position)
-                        if role_input in user_roles:  
+                            if role.position == role_input:
+                                role_found = True
+                        if role_found:
                             input_date = input("Enter date: YYY-MM-DD: ")
                             input_date = input_date.strip()
                             valid_date = Validate.validate_date(input_date) 
                             if valid_date == None:
                                 print(Validate.date_error_message)
                                 user_continue=input('Would you like to continue? Y/N ')
-                                if user_continue.upper() in ans:
-                                    if user_continue == "N" or user_continue == "n":
-                                        sched_loop=False
-                                        x=False
-                                        clear_screen()
-                                        break
+                                if user_continue == "N" or user_continue == "n":
+                                    sched_loop=False
+                                    x=False
+                                    clear_screen()
+                                    break
                             else:
                                 print("\nSchedule updating...")
                                 Schedule.add_to_schedule(username, role_input, input_date)   
                                 print(f"Adding {username} as a {role_input} to the schedule for {input_date}")
-                                # user_input = input("x to exit: ") 
-                                # user_input = user_input.strip() 
-                                user_input = Validate.keep_output_on_screen()
+                                user_input = keep_output_on_screen()
                                 if user_input.lower() == "x" :
                                     sched_loop=False
                                     x=False
@@ -354,13 +350,13 @@ def add_to_schedule():
                         else:
                             user_input = input(f"{username} does not volunteer as a {role_input}. Would you like to enter another role? Y/N ")  
                             user_input = user_input.strip()
-                            if user_input.upper() in ans:
-                                if user_input.upper() == "N":
-                                    x=False
-                                    clear_screen()
-                                    break
-                                else:
-                                    break
+                            if user_input.upper() == "N":
+                                x = False
+                                sched_loop = False
+                                clear_screen()
+                                break
+                            else:
+                                continue
                     else:  
                         role_input = input(f"{role_input} is not a valid role. Would you like to continue ? Y/N ") 
                         role_input = role_input.strip()
@@ -369,7 +365,7 @@ def add_to_schedule():
                             clear_screen()
                             break
                         else:
-                            break
+                            continue
             else: #if username is valid
                 user_input = input(f'{username} does not exist. Please check spelling. Would you like to continue ?  Y/N  ')
                 user_input = user_input.strip()
@@ -382,10 +378,12 @@ def modify_schedule():
     print(modify_schedule_banner)
     changes = {}
     user_loop = True
-    while user_loop:
+    x=True
+    while x:
         username = input("Enter usersname for current schedule or x to quit: ")
         username = username.strip()
         if username.upper() == "X":
+           x=False
            clear_screen() 
            break
         else:
@@ -393,57 +391,56 @@ def modify_schedule():
             if not volunteer:
                 user_continue = input(f"{username} does not exit. Would you like to enter another username Y/N? ")
                 if user_continue.upper() == "N":
-                    print("do you get here")
                     x=False
                     clear_screen()
                     break
                 else:
                     continue
             else:
-                user_input = input("Would you like to change the scheduled volunteer Y/N ? ")
-                user_input = user_input.strip()
-                if user_input.upper() == "N":
-                    user_loop = False
-                else:
-                    change_user = input("Enter username: ")
-                    change_user = change_user.strip()
-                    valid_user = user_exist(change_user)
-                    if valid_user:
-                        changes["username"]=change_user
+                while user_loop:
+                    user_input = input("\nWould you like to change the scheduled volunteer Y/N ? ")
+                    user_input = user_input.strip()
+                    if user_input.upper() == "N":
                         user_loop = False
                     else:
-                        user_continue = input(f"{valid_user} does not exist. Would you like to enter another username Y/N? ")
-                        if user_continue.upper() == "N":
-                            print(user_continue)
-                            user_quit = input("Would like to continue Y/N? ")
-                            if user_quit.upper() == "N":
-                                user_loop = False
-                                # x = False
-                                clear_screen()
-                                break
-                            else:
-                                user_loop = False
+                        change_user = input("Enter username: ")
+                        change_user = change_user.strip()
+                        valid_user = user_exist(change_user)
+                        if valid_user:
+                            changes["username"]=change_user
+                            user_loop = False
+                        else:
+                           user_continue = input(f"{change_user} does not exist. Would you like to enter another username Y/N? ")
+                           if user_continue.upper() == "N":
+                                user_quit = input("Would like to continue Y/N? ")
+                                if user_quit.upper() == "N":
+                                    user_loop = False
+                                    x = False
+                                    clear_screen()
+                                    break
+                                else:
+                                    user_loop = False
+                           else:
+                               continue    
 
             date_loop = True
             while date_loop:
-                input_date = input("Enter scheduled date YYYY-MM-DD: ")
+                input_date = input("\nEnter scheduled date YYYY-MM-DD: ")
                 input_date = input_date.strip()
                 valid_date = Validate.validate_date(input_date) 
                 if not valid_date:
                     user_continue = input(f"{input_date} is not a valid date. Would you like to enter another date Y/N? ")
-                    if user_continue.upper() in ans:
-                        if user_continue.upper() == "N":
-                            date_loop = True
-                            x=False
-                            clear_screen()
-                            break
+                    if user_continue.upper() == "N":
+                        date_loop = True
+                        clear_screen()
+                        break
                 else:
                     date_input = input("Would you like to change the scheduled date Y/N? ")
                     date_input = date_input.strip()
                     if date_input.upper() == "N":
                          date_loop = False
                     else:
-                        change_date = input("Enter valid date YYYY-MM-DD:")
+                        change_date = input("\nEnter valid date YYYY-MM-DD:")
                         change_date = change_date.strip()
                         valid_date = Validate.validate_date(change_date) 
                         if valid_date:
@@ -451,33 +448,30 @@ def modify_schedule():
                             date_loop = False
                         else:
                             user_continue = input(f"{change_date} is not a valid date. Would you like to enter another date Y/N? ")
-                            if user_continue.upper() in ans:
-                                if user_continue.upper() == "N":
-                                    user_quit = input("Would like to continue Y/N? ")
-                                    if user_quit.upper() == "N":
-                                        date_loop = False
-                                        x = False
-                                        clear_screen()
-                                        break
-                                    else:
-                                        date_loop = False
+                            if user_continue.upper() == "N":
+                                user_quit = input("Would like to continue Y/N? ")
+                                if user_quit.upper() == "N":
+                                    date_loop = False
+                                    clear_screen()
+                                    break
+                                else:
+                                    continue
                 
             role_loop = True
             while role_loop:
-                input_role = input("Enter the scheduled role: ") 
+                input_role = input("\nEnter the scheduled role: ") 
                 input_role = input_role.strip()
                 valid_role = Validate.validate_role(input_role)
                 if not valid_role:
                     user_continue = input(f"{input_role} is not a valid role. Would you like to enter another role Y/N? ")
                     if user_continue.upper() == "N":
                         role_loop = False
-                        x=False
                         clear_screen()
                         break
                     else:
                         break
                 else:
-                    role_input = input("Would you like to change the scheduled role Y/N ?")
+                    role_input = input("\nWould you like to change the scheduled role Y/N ?")
                     role_input = role_input.strip()
                     if role_input.upper() == "N":
                         role_loop = False
@@ -491,24 +485,21 @@ def modify_schedule():
                             role_loop = False
                             break
                         else:  
-                            user_continue = input(f"{change_role} is not a valid role. Would you like to enter another role Y/N? ")
+                            user_continue = input(f"\n{change_role} is not a valid role. Would you like to enter another role Y/N? ")
                             if user_continue.upper() == "N":
                                 user_quit = input("Would like to continue Y/N? ")
                                 if user_quit.upper() == "N":
                                     date_loop = False
-                                    x = False
                                     clear_screen()
                                     break
                                 else:
-                                    date_loop = False
-        print("the next thing",changes)                                  
+                                    continue
+                                          
         Schedule.modify_schedule(username, input_date, input_role,changes) 
-        # user_input = input("x to exit: ") 
-        # user_input = user_input.strip() 
-        user_input = Validate.keep_output_on_screen()
+        user_input = keep_output_on_screen()
         if user_input.lower() == "x" :
            clear_screen()
-
+           break
 
 def delete_schedule():
     x=True
