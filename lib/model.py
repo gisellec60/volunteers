@@ -253,4 +253,4 @@ class Schedule(Base):
                f'Role: {self.role_id}, ' + \
                f'Date: {self.date} '
              
-# Schedule.query_by_name("Kayla_Diaz")             
+            

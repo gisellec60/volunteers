@@ -9,7 +9,10 @@ engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 
+
+
 class Validate():
+
     name_error_message="First and last name must consist of A-z ,-,'."
     email_error_message="Please enter a valid email"
     phone_error_message="Please enter a valid phone number"
@@ -20,6 +23,9 @@ class Validate():
     week_error_message="Week must be an integer 1-5"
     date_error_message=f"Please enter a valid date: Note date cannot be before {date.today()}"
     
+    def clear_screen():
+        print("\n" * 40)
+
     def validate_name(name):
         name_pattern =  r"[A-z'-]+$"
         regex = re.compile(name_pattern)
@@ -89,4 +95,8 @@ class Validate():
         regex = re.compile(schedule_date_pattern)
         match = regex.fullmatch(date)
         return match
-         
+
+    def username_input():
+        username = input("Enter usersname for current schedule or x to quit: ")
+        username = username.strip()
+        return username         
