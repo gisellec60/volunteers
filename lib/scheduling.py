@@ -234,7 +234,8 @@ def modify_volunteer():
 
                                 value_input = input("Enter Change:  ")                    
                                 value_input = value_input.strip()
-                                if value_input not in valid_roles:
+                                roles_valid = Validate.validate_role(input_role)
+                                if not roles_valid:
                                     user_continue=input(f'\n{value_input} is not a valid role.\nWould you like to continue? Y/N ')
                                     if user_continue.upper() == "N" :
                                         x=False
@@ -275,7 +276,8 @@ def modify_volunteer():
                     if key.lower() == "floater":
                         new_value = True if value == 'Y' else False 
                         changes[key] = new_value
-                    print(f"\nchanging {key} to {value}...") 
+                    if key != 'old':    
+                       print(f"\nchanging {key} to {value}...") 
 
                 Volunteer.modify_volunteer(username,changes)   
                 print("Change was sucessful")
@@ -304,7 +306,6 @@ def add_to_schedule():
     clear_screen() 
     print(add_schedule_banner)
     ans=["Y","N"]
-    valid_roles = ["greeter", "usher","welcome table","prayer"]
     x=True
     sched_loop = False
     user_roles=[]
@@ -320,7 +321,8 @@ def add_to_schedule():
                 while sched_loop:
                     role_input = input("Enter role: ")
                     role_input = role_input.strip()
-                    if role_input in valid_roles:
+                    role_valid = Validate.validate_role()
+                    if role_valid: 
                         volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()
                         for role in volunteer.roles:
                             user_roles.append(role.position)
