@@ -216,8 +216,8 @@ def modify_volunteer():
                                         user_roles.append(role.position)
                                     input_role = input("\nEnter role to change: ")
                                     input_role = input_role.strip()
-                                    valid_roles = valid_roles(input_role)
-                                    if not valid_roles:
+                                    roles_valid = Validate.validate_role(input_role)
+                                    if not roles_valid:
                                         user_continue=input(f'\n{input_role} is not one of the roles.\nWould you like to continue? Y/N ')
                                         user_continue = user_continue.strip()
                                         if user_continue.upper() == "N" :
@@ -256,9 +256,7 @@ def modify_volunteer():
 
                         user_continue = input("\nMaking another change? Y/N ") 
                         if user_continue.upper() == "N":
-                            x=False
                             change_loop = False
-                            clear_screen()
                             break
                         else:
                             continue
@@ -276,12 +274,12 @@ def modify_volunteer():
                 for key,value in changes.items():
                     if key.lower() == "floater":
                         new_value = True if value == 'Y' else False 
-                        changes[key]=new_value
-                        print(f"\nchanging {key} to {value}...") 
-                         
+                        changes[key] = new_value
+                    print(f"\nchanging {key} to {value}...") 
+
                 Volunteer.modify_volunteer(username,changes)   
                 print("Change was sucessful")
-                user_input = Validate.keep_output_on_screen()
+                user_input = keep_output_on_screen()
                 if user_input.lower() == "x" :
                     x=True
                     clear_screen() 
@@ -572,7 +570,7 @@ def print_schedule_by_name():
                 Schedule.query_by_name(username)
                 # user_input = input("x to exit: ") 
                 # user_input = user_input.strip() 
-                user_input = keep_output_on_creen()
+                user_input = keep_output_on_screen()
                 if user_input.lower() == "x" :
                    clear_screen()
                    break    
@@ -599,7 +597,7 @@ def print_schedule_by_date():
                 Schedule.query_by_date(date_input)
                 # user_input = input("x to exit: ") 
                 # user_input = user_input.strip() 
-                user_input = keep_output_on_creen()
+                user_input = keep_output_on_screen()
                 if user_input.lower() == "x" :
                    clear_screen()
                    break    
