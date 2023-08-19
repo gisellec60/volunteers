@@ -70,10 +70,17 @@ Schedule:
 
 Maker sure to strip all spaces from input:  user_input = user_input.strip()
 
+Check for duplicate username
+
 pipenv install alembic sqlalchemy==1.4.41
 pipenv install faker
 pip install simple-term-menu
 
+Things to cleanup
+    commented out
+    print statements
+    unused variables
+    unused imports
 
   
 

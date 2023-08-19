@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, date
 from validate import Validate
+import random
 
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
@@ -59,6 +60,9 @@ class Volunteer(Base,Validate):
       
     def add_volunteer(fname, lname, email, phone, floater, week, position="prayer"):
             username = f"{fname}_{lname}"
+            username_exist = session.query(Volunteer).filter(Volunteer.username == username).first()
+            if username_exist:
+                username = username + "_" + str(random.randint(1,50))  
             assigned = "No"  
             role = session.query(Role).filter(Role.position == position).first()
             volunteer = Volunteer(
@@ -79,20 +83,20 @@ class Volunteer(Base,Validate):
     def delete_volunteer(username):
         volunteer = session.query(Volunteer).filter(
                     Volunteer.username == username).first()
-        
+
         # Delete Volunteer _Role association from volunteer_role table
         [volunteer.roles.remove(role) for role in volunteer.roles]
         
         # Delete volunteer from schedule
         if volunteer.schedules:
             [session.delete(schedule) for schedule in volunteer.schedules]
-       
+
         # Delete Volunteer
         session.delete(volunteer)
         session.commit() 
-
+    
     def modify_volunteer(username, changes):
-        volunteer=session.query(Volunteer).filter(Volunteer.username == username).one()
+        volunteer=session.query(Volunteer).filter(Volunteer.username == username).first()
         for key,value in changes.items():
             if key == "role":
                role = session.query(Role).filter(Role.position == value).first()
@@ -103,6 +107,7 @@ class Volunteer(Base,Validate):
                       volunteer.roles.remove(role)
             setattr(volunteer,key,value)
         session.commit()
+        return volunteer
     
 class Role(Base):
     __tablename__ = 'roles'

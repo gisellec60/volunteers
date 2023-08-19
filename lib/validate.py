@@ -54,6 +54,11 @@ class Validate():
         user_roles = ["greeter","usher","welcome table", "prayer"]   
         if role in user_roles:
             return True
+        
+    def validate_fields(field):
+            valid_fields = ["first_name", "last_name", "email", "phone","floater","week","role"]  
+            if field in valid_fields:
+                return True    
            
     def list_volunteer_roles(username,role):
         role_list=[]
@@ -99,4 +104,9 @@ class Validate():
     def username_input():
         username = input("Enter usersname for current schedule or x to quit: ")
         username = username.strip()
-        return username         
+        return username     
+
+    def keep_output_screen():
+        user_input = input("x to exit: ") 
+        user_input = user_input.strip()     
+        return user_input
