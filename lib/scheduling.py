@@ -469,7 +469,7 @@ def modify_schedule():
                         clear_screen()
                         break
                     else:
-                        break
+                        continue
                 else:
                     role_input = input("\nWould you like to change the scheduled role Y/N ?")
                     role_input = role_input.strip()
@@ -481,7 +481,6 @@ def modify_schedule():
                         valid_change_role = Validate.validate_role(change_role)
                         if valid_change_role:
                             changes['role'] = change_role
-                            print(changes)
                             role_loop = False
                             break
                         else:  
