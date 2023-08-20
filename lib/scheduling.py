@@ -49,8 +49,7 @@ def user_exist(username):
         return volunteer 
 
 def keep_output_on_screen():
-        user_input = input("x to exit: ") 
-        user_input = user_input.strip()     
+        user_input = input("\nEnter to exit: ") 
         return user_input
 
 def try_again():
@@ -250,16 +249,13 @@ def add_volunteer():
         position = add_position()
         # field = "position"
         # position = get_volunteer_information(field)
-        clear_screen()
         x=False
         break 
 
     volunteer = Volunteer.add_volunteer(fname, lname, email, phone, floater , week, position )
-    print(f"{fname} {lname} <usrname: {volunteer.username}> added to the schedule as a {position}")
-    user_input = keep_output_on_screen()
-    if user_input.upper() == "X":
-        x=False
-        clear_screen() 
+    print(f"\n{fname} {lname} <usrname: {volunteer.username}> added to the schedule as a {position}")
+    keep_output_on_screen()
+    clear_screen() 
        
 
 def delete_volunteer():
@@ -273,15 +269,13 @@ def delete_volunteer():
            break
         else:
             # user_exist = session.query(Volunteer).filter(Volunteer.username == username).first()
-            exist_user = user_exist(username)
-            if exist_user:
-                volunteer = Volunteer.delete_volunteer(username)
+            volunteer = user_exist(username)
+            if volunteer:
                 print(f'\n{volunteer.first_name} {volunteer.last_name} {username} was successfully deleted\n')
-                # user_input = input("X to exit: ")  
-                user_input = keep_output_on_screen()
-                if user_input.upper() == "X":
-                    clear_screen() 
-                    break
+                Volunteer.delete_volunteer(username)
+                keep_output_on_screen()
+                clear_screen() 
+                break
             else:
                 username = input(f'{username} does not exist. Enter a valid username or x to quit')    
                 if username.upper() == "X":
@@ -385,15 +379,9 @@ def modify_volunteer():
 
                 Volunteer.modify_volunteer(username,changes)   
                 print("Change was sucessful")
-                user_input = keep_output_on_screen()
-                if user_input.lower() == "x" :
-                    x=True
-                    clear_screen() 
-                    break
-                else:
-                    x=True
-                    clear_screen() 
-                    break
+                keep_output_on_screen()
+                clear_screen() 
+                break
 
             else: #if username is valid
                 user_input = input(f'{username} does not exist. Please check spelling. Would you like to continue ?  Y/N  ')
@@ -445,12 +433,10 @@ def add_to_schedule():
                                 print("\nSchedule updating...")
                                 Schedule.add_to_schedule(username, role_input, input_date)   
                                 print(f"Adding {username} as a {role_input} to the schedule for {input_date}")
-                                user_input = keep_output_on_screen()
-                                if user_input.lower() == "x" :
-                                    sched_loop=False
-                                    x=False
-                                    clear_screen()
-                                    break    
+                                keep_output_on_screen()
+                                x=False
+                                clear_screen()
+                                break    
                         else:
                             user_input = input(f"{username} does not volunteer as a {role_input}. Would you like to enter another role? Y/N ")  
                             user_input = user_input.strip()
@@ -599,10 +585,9 @@ def modify_schedule():
                                     continue
                                           
         Schedule.modify_schedule(username, input_date, input_role,changes) 
-        user_input = keep_output_on_screen()
-        if user_input.lower() == "x" :
-           clear_screen()
-           break
+        keep_output_on_screen()
+        clear_screen()
+        break
 
 def delete_schedule():
     x=True
@@ -630,17 +615,11 @@ def delete_schedule():
                         print("\n")
                         Schedule.delete_schedule(username,input_date)
                         print(f"\n{volunteer.first_name} {volunteer.last_name} has been removed from the schedule for {input_date}\n")
-                        user_input = keep_output_on_screen()
-                        if user_input.upper() == "X" :
-                           clear_screen()
-                           date_loop=True
-                           x = False
-                           break
-                        else:
-                            clear_screen()
-                            date_loop=True
-                            x = False
-                            break
+                        keep_output_on_screen()
+                        date_loop = False
+                        x = False
+                        clear_screen()
+                        break
                     else:
                         user_continue = input(f"\n{input_date} is not a valid date. Would you like to enter another date Y/N? ")
                         if user_continue.upper() == "N":
@@ -666,10 +645,9 @@ def print_schedule_by_name():
             if volunteer:
                 Schedule.query_by_name(username)
                 print("\n")
-                user_input = keep_output_on_screen()
-                if user_input.lower() == "x" :
-                   clear_screen()
-                   break    
+                keep_output_on_screen()
+                clear_screen()
+                break    
             else:
                 user_continue = input(f"{username} does not exist.  Would you like to enter another username? Y/N ")    
                 if user_continue.upper() == "N":
@@ -691,12 +669,9 @@ def print_schedule_by_date():
             valid_date = Validate.validate_date(date_input)
             if valid_date:
                 Schedule.query_by_date(date_input)
-                # user_input = input("x to exit: ") 
-                # user_input = user_input.strip() 
-                user_input = keep_output_on_screen()
-                if user_input.lower() == "x" :
-                   clear_screen()
-                   break    
+                keep_output_on_screen()
+                clear_screen()
+                break    
             else:
                 user_continue = input("Invalid date. Would you like to re-enter the date Y/N ? ")
                 if user_continue.upper() == "N":

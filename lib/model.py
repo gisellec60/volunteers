@@ -212,15 +212,15 @@ class Schedule(Base):
         for key,value in changes.items():
             if key == "username":
                user = session.query(Volunteer).filter(Volunteer.username == value ).first()
-               print(f'changing username from {username} to {value}...\n') 
+               print(f'\nchanging username from {username} to {value}...\n') 
                schedule.vol_id=user.id
             elif key == "role":
                 new_role = session.query(Role).filter(Role.position == value ).first()
-                print(f'changing role from {role.position} to {new_role.position}...\n') 
+                print(f'\nchanging role from {role.position} to {new_role.position}...\n') 
                 schedule.role_id=new_role.id
             else:
                 new_date = datetime.strptime(value,'%Y-%m-%d').date()
-                print(f'changing date from {schedule_date} to {new_date}...\n') 
+                print(f'\nhanging date from {schedule_date} to {new_date}...\n') 
                 schedule.date=new_date   
              
              
