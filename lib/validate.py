@@ -13,7 +13,7 @@ session = Session()
 
 class Validate():
 
-    name_error_message="First and last name must consist of A-z ,-,'."
+    name_error_message="First and last name can only consist of A-z ,-,'."
     email_error_message="Please enter a valid email"
     phone_error_message="Please enter a valid phone number"
     role_error_message="role contains only A-z. Please enter a valid role"
@@ -21,7 +21,7 @@ class Validate():
     user_exist_error_message="username does not exist"
     floater_error_message="Floater value: True or False"
     week_error_message="Week must be an integer 1-5"
-    date_error_message=f"Please enter a valid date: Note date cannot be before {date.today()}"
+    date_error_message=f"Please enter a valid date: YYY-MM-DD "
     
     def clear_screen():
         print("\n" * 40)
@@ -102,9 +102,10 @@ class Validate():
         return match
 
     def username_input():
-        username = input("Enter usersname for current schedule or x to quit: ")
+        username = input("\nEnter the username or x to quit: ")
         username = username.strip()
         return username     
+    
 
     def keep_output_screen():
         user_input = input("x to exit: ") 

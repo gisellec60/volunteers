@@ -181,7 +181,7 @@ class Schedule(Base):
         [session.delete(schedule) for schedule in volunteer.schedules if schedule.date == schedule_date]
         if(len(volunteer.schedules) == 1 ):
             volunteer.assigned = "No"
-        print(f"Removing {volunteer.first_name} {volunteer.last_name} from the schedule for {input_date} ")
+        print(f"Removing {volunteer.first_name} {volunteer.last_name} from the schedule for {input_date}... ")
         session.commit()
 
     def swap(username, input_date, role, swap_name):
@@ -247,9 +247,9 @@ class Schedule(Base):
                     if schedule.swappout_id:
                         for vol in volunteers:
                             if vol.id == schedule.swappout_id:
-                                print(schedule.date.strftime("%B %d %Y"), role.position, "<" + vol.username + ">")
+                                print(schedule.date.strftime("%B %d, %Y"),":" + role.position, "<" + vol.username + ">")
                     else:
-                        print(schedule.date.strftime("%B %d %Y"), role.position)  
+                        print(schedule.date.strftime("%B %d, %Y"), ":" + role.position)  
                            
     def __repr__(self):
         return f'Schedule: {self.id}, ' + \
