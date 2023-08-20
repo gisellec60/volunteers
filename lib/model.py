@@ -229,10 +229,12 @@ class Schedule(Base):
     def query_by_date(input_date):
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
         schedules = session.query(Schedule).filter(Schedule.date == schedule_date).all()
-
-        print (f"\n {input_date}")
+        
+        print (f"\nSchedule date: {input_date}\n")
         for schedule in schedules:
-            print (f"{schedule.volunteer}")
+            volunteer = session.query(Volunteer).filter(Volunteer.id == schedule.vol_id).first()
+            role = session.query(Role).filter(Role.id == schedule.role_id).first()
+            print (f"{volunteer.first_name} {volunteer.last_name}: {role.position}")
 
     def query_by_name(username):
         volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()  
