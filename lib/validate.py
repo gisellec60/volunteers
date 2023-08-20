@@ -19,7 +19,7 @@ class Validate():
     role_error_message="role contains only A-z. Please enter a valid role"
     role_exist_error_message="role does not exist"
     user_exist_error_message="username does not exist"
-    floater_error_message="Floater value: True or False"
+    floater_error_message="Floater value: Y or N"
     week_error_message="Week must be an integer 1-5"
     date_error_message=f"Please enter a valid date: YYY-MM-DD "
     
@@ -33,7 +33,7 @@ class Validate():
         return match
 
     def validate_email(email):
-        email_pattern = r"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b"
+        email_pattern = r"^[A-z0-9._%+-]+@[A-z0-9.-]+\.[A-z]{2,}\b"
         regex = re.compile(email_pattern)
         match = regex.fullmatch(email)
         return match
