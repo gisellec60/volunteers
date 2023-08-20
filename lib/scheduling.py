@@ -4,7 +4,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
-
 from model import  Volunteer, Role, Schedule, Validate
 import click
 import ipdb
@@ -15,7 +14,29 @@ from prettycli import red, yellow
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
 session = Session()
+
 ############################### Functions #####################################################
+role_error_message="role does not exist"
+name_error_message="First and last name can only consist of A-z ,-,'."
+email_error_message="Please enter a valid email"
+phone_error_message="Please enter a valid phone number"
+role_error_message="role does not exist"
+user_exist_error_message="username does not exist"
+floater_error_message="Floater value: Y or N"
+week_error_message="Week must be an integer 1-5"
+date_error_message=f"Please enter a valid date: YYY-MM-DD "
+
+def week_input_message():
+  return "\nEnter week [1-5] x to quit: "
+
+role_input_message = "\nEnter a  position [greeter, usher, welcome table, prayer]: "
+
+
+
+def validate_week(week):
+    if week in [1,2,3,4,5]:
+        return
+    
 def user_exist(username):
         volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
         return volunteer
@@ -32,7 +53,66 @@ def keep_output_on_screen():
         user_input = user_input.strip()     
         return user_input
 
+def try_again():
+    input("\nEnter email or x to quit: ")
 
+def add_week():
+    week_loop = True
+    while week_loop:
+        week = input ("\nEnter week of month to serve  [1-5]: ")
+        if week.upper() == "X":
+            break
+        week_valid=Validate.validate_floater(week)
+        if not week_valid :
+            print("\n",Validate.week_error_message,"\n")
+            week = input("\nHit Enter to try again or x to quit: ")
+            if week.upper() == "X":
+                week_loop = False
+                break
+            else:
+                continue
+        else:
+            week_loop = False  
+        return week   
+
+def add_position():
+    position_loop = True
+    while position_loop:
+        position = input ('\nEnter a  position [greeter, usher, welcome table, prayer]: ')
+        if position.upper == "X":
+            break
+        else:
+            position_valid=Validate.validate_role(position)
+            if not position_valid :
+                print("\n",Validate.role_error_message,"\n")
+                if position.upper() == "X":
+                    position_loop = False
+                    break
+                else:
+                    continue
+            else:
+                position_loop = False  
+        return position   
+    
+def get_volunteer_information(field):
+    loop = True
+    while loop:
+        field_input = input(f"{field}_input_message")
+        if field_input.upper == "X":
+            break
+        else:
+            field_valid = (f"validate_{field}(field_input)")
+            if not field_valid :
+                print(f"{field_input}_error_message,")
+                field_input = input("\nHit enter to try again or x to quit: ")
+                if field_input.upper() == "X":
+                    loop = False
+                    break
+                else:
+                    continue
+            else:
+                loop = False  
+        return field_input   
 ###################################################################################
 
 def add_volunteer():
@@ -159,40 +239,28 @@ def add_volunteer():
            clear_screen()
            x=False
            break 
+        
+        week=add_week()
+        # field = "week"
+        # week = get_volunteer_information(field)
+        if week.upper() == "X":
+           x=False
+           break 
+ 
+        position = add_position()
+        # field = "position"
+        # position = get_volunteer_information(field)
+        clear_screen()
+        x=False
+        break 
 
-    # week_loop = True
-    # while week_loop:
-    #     week = input ("week [1-5]: ")
-    #     if week == "quit":
-    #         break
-    #     week_valid=Validate.validate_floater(week)
-    #     if week_valid == None:
-    #         print("\n",Validate.week_error_message,"\n")
-    #     else:
-    #         week_loop = False   
-    # if week == "quit":
-    #     break      
-    
-    # position_loop = True
-    # while position_loop:
-    #     position = input ('Enter a  position [greeter, usher, welcome table, prayer]: ')
-    #     if position == "quit":
-    #         break
-    #     position_valid=Validate.validate_role(position)
-    #     if position_valid == None:
-    #         print("\n",Validate.role_error_message,"\n")
-    #     else:
-    #         position_loop = False   
-    # if position == "quit":
-    #     break      
-
-    # volunteer = Volunteer.add_volunteer(fname, lname, email, phone, floater_result , week, position )
-    # print(f"{fname} {lname} <usrname: {volunteer.username}> added to the schedule as a {position}")
-    # user_input = keep_output_on_screen()
-    # if user_input.upper() == "X":
-    #     x=False
-    #     clear_screen() 
-    #     break
+    volunteer = Volunteer.add_volunteer(fname, lname, email, phone, floater , week, position )
+    print(f"{fname} {lname} <usrname: {volunteer.username}> added to the schedule as a {position}")
+    user_input = keep_output_on_screen()
+    if user_input.upper() == "X":
+        x=False
+        clear_screen() 
+       
 
 def delete_volunteer():
     print(delete_banner)
