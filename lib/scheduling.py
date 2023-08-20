@@ -42,8 +42,6 @@ def add_volunteer():
         while fname_loop:
             fname = input("\nEnter first name or x to quit: ")
             if fname.upper() == "X":
-               x=False
-               fname_loop = False
                break
             else:
                 fname_valid=Validate.validate_name(fname) 
@@ -51,106 +49,132 @@ def add_volunteer():
                     fname_loop = False
                 else:    
                     print("\n",Validate.name_error_message,"\n")
-                    user_input = input("Enter to try again or x to quit ")
-                    if user_input.upper() == "X":
-                        x=False
-                        fname_loop = False
-                        break
+                    fname = input("Enter to try again or x to quit ")
+                    if fname.upper() == "X":
+                         break
                     else:
                         continue   
 
-                lname_loop = True
-                while lname_loop:
-                    lname = input("\nEnter last name or x to quit:  ")
-                    if lname == "quit":
-                        break
-                    lname_valid=Validate.validate_name(lname)
-                    if lname_valid == None:
-                        print("\n",Validate.name_error_message,"\n")
-                        user_input = input("Enter to try again or x to quit ")
-                    else:
-                        if user_input.upper() == "X":
-                            x=False
-                            fname_loop = False
-                            break
-                        else:
-                            continue   
+        if fname.upper() == "X":
+            clear_screen()
+            x=False
+            break 
 
-                email_loop = True          
-                while email_loop:
-                   email = input("add email: ")
-                   if email == "quit":
-                     email_loop = False
-                     break
-                   email_exist = session.query(Volunteer).filter(Volunteer.email == email).first()
-                   if email_exist:
-                       print("email already exist")
-                   else:              
-                       email_loop = False   
-                if email == "quit":
-                    break
+        lname_loop = True
+        while lname_loop:
+            lname = input("\nEnter last name or x to quit:  ")
+            if lname.upper() == "X":
+                break
+            else:
+                lname_valid=Validate.validate_name(lname)
+                if lname_valid:
+                    lname_loop = False
+                else:    
+                    print("\n",Validate.name_error_message,"\n")
+                    lname = input("Hit enter to try again or x to quit ")
+                    if lname.upper() == "X":
+                        break
+                    else:
+                        continue  
+
+        if lname.upper() == "X":
+            clear_screen()
+            x=False
+            break 
+
+        email_loop = True          
+        while email_loop:
+            email = input("\nEnter last name or x to quit: ")
+            if email.upper() == "X":
+                break
+            else:
+                email_exist = session.query(Volunteer).filter(Volunteer.email == email).first()
+                if email_exist:
+                    print(f"{email} already exist")
+                    email = input("Hit enter to try again or x to quit ")
+                    if email.upper() == "X":
+                       break
+                    else:
+                        continue
+                else:
+                    valid_email = Validate.validate_email(email)    
+                    if valid_email:
+                        email_loop = False
+                    else:
+                        email = input(f"{email} is invalid. Hit enter to try again or x to quit ") 
+                        if email.upper() == "X":
+                               break
+                        else:
+                            continue
+
+        if email.upper() == "X":
+            clear_screen()
+            x=False
+            break 
+                 
    
-                phone_loop = True  
-                while phone_loop:
-                    phone = input("add phone: ")
-                    if phone == "quit":
-                        break
-                    phone_valid=Validate.validate_phone(phone) 
-                    if phone_valid == None:
-                        print("\n",Validate.phone_error_message,"\n")
-                    else:
-                        phone_loop = False   
-                if phone == "quit":
-                   break      
-                
-                floater_loop = True
-                while floater_loop:
-                    floater = input("floater? Y/N: ")
-                    if floater == "quit":
-                        break
-                    floater_result = True if floater == 'Y' else False 
-                    
-                    floater_valid=Validate.validate_floater(floater_result)
-                    if floater_valid == 'No':
-                        print("\n",Validate.floater_error_message,"\n")
-                    else:
-                        floater_loop = False   
-                if floater == "quit":
-                    break      
-           
-                week_loop = True
-                while week_loop:
-                    week = input ("week [1-5]: ")
-                    if week == "quit":
-                        break
-                    week_valid=Validate.validate_floater(week)
-                    if week_valid == None:
-                        print("\n",Validate.week_error_message,"\n")
-                    else:
-                        week_loop = False   
-                if week == "quit":
-                    break      
-               
-                position_loop = True
-                while position_loop:
-                    position = input ('Enter a  position [greeter, usher, welcome table, prayer]: ')
-                    if position == "quit":
-                        break
-                    position_valid=Validate.validate_role(position)
-                    if position_valid == None:
-                        print("\n",Validate.role_error_message,"\n")
-                    else:
-                        position_loop = False   
-                if position == "quit":
-                    break      
-            
-                volunteer = Volunteer.add_volunteer(fname, lname, email, phone, floater_result , week, position )
-                print(f"{fname} {lname} <usrname: {volunteer.username}> added to the schedule as a {position}")
-                user_input = keep_output_on_screen()
-                if user_input.upper() == "X":
-                    x=False
-                    clear_screen() 
-                    break
+   
+    # phone_loop = True  
+    # while phone_loop:
+    #     phone = input("add phone: ")
+    #     if phone == "quit":
+    #         break
+    #     phone_valid=Validate.validate_phone(phone) 
+    #     if phone_valid == None:
+    #         print("\n",Validate.phone_error_message,"\n")
+    #     else:
+    #         phone_loop = False   
+    # if phone == "quit":
+    #     break      
+    
+    # floater_loop = True
+    # while floater_loop:
+    #     floater = input("floater? Y/N: ")
+    #     if floater == "quit":
+    #         break
+    #     floater_result = True if floater == 'Y' else False 
+        
+    #     floater_valid=Validate.validate_floater(floater_result)
+    #     if floater_valid == 'No':
+    #         print("\n",Validate.floater_error_message,"\n")
+    #     else:
+    #         floater_loop = False   
+    # if floater == "quit":
+    #     break      
+
+    # week_loop = True
+    # while week_loop:
+    #     week = input ("week [1-5]: ")
+    #     if week == "quit":
+    #         break
+    #     week_valid=Validate.validate_floater(week)
+    #     if week_valid == None:
+    #         print("\n",Validate.week_error_message,"\n")
+    #     else:
+    #         week_loop = False   
+    # if week == "quit":
+    #     break      
+    
+    # position_loop = True
+    # while position_loop:
+    #     position = input ('Enter a  position [greeter, usher, welcome table, prayer]: ')
+    #     if position == "quit":
+    #         break
+    #     position_valid=Validate.validate_role(position)
+    #     if position_valid == None:
+    #         print("\n",Validate.role_error_message,"\n")
+    #     else:
+    #         position_loop = False   
+    # if position == "quit":
+    #     break      
+
+    # volunteer = Volunteer.add_volunteer(fname, lname, email, phone, floater_result , week, position )
+    # print(f"{fname} {lname} <usrname: {volunteer.username}> added to the schedule as a {position}")
+    # user_input = keep_output_on_screen()
+    # if user_input.upper() == "X":
+    #     x=False
+    #     clear_screen() 
+    #     break
 
 def delete_volunteer():
     print(delete_banner)
