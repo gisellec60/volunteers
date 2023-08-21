@@ -182,7 +182,7 @@ class Schedule(Base):
         [session.delete(schedule) for schedule in volunteer.schedules if schedule.date == schedule_date]
         if(len(volunteer.schedules) == 1 ):
             volunteer.assigned = "No"
-        print(green(f"Removing {volunteer.first_name} {volunteer.last_name} from the schedule for {input_date}... "))
+        print(f"Removing {volunteer.first_name} {volunteer.last_name} from the schedule for {input_date}... ")
         session.commit()
 
     def swap(username, input_date, role, swap_name):
@@ -221,7 +221,7 @@ class Schedule(Base):
                 schedule.role_id=new_role.id
             else:
                 new_date = datetime.strptime(value,'%Y-%m-%d').date()
-                print(green(f'\n hanging date from {schedule_date} to {new_date}...\n')) 
+                print(green(f'\nchanging date from {schedule_date} to {new_date}...\n')) 
                 schedule.date=new_date   
              
         session.commit()
