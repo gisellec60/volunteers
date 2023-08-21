@@ -213,16 +213,16 @@ def modify_volunteer():
                         if key_input == "role":
                             role_loop = True
                             while role_loop:
+                                user_roles=[]
+                                print("\n")
+                                for role in volunteer.roles:
+                                    print(role.position)
+                                    user_roles.append(role.position)
 
-                                if(len(volunteer.roles)) > 1 :
-                                    print("\n")
-                                    user_roles=[]
-                                    for role in volunteer.roles:
-                                        print(role.position)
-                                        user_roles.append(role.position)
+                                #if volunteer has more than one role select role to change    
+                                if(len(volunteer.roles)) > 1 :   
                                     input_role = input("\nEnter role to change: ")
                                     input_role = input_role.strip()
-                                    # roles_valid = Validate.validate_role(input_role)
                                     if input_role not in user_roles:
                                         print(red(f"\n{input_role} is not one of the roles.\n"))
                                         user_continue = input("\nHit enter to continue or x to quit ")
@@ -235,7 +235,11 @@ def modify_volunteer():
                                             break
                                         else:
                                             continue 
-                                        
+                                #else just grab the one role
+                                else: 
+                                    for role in user_roles:
+                                        input_role = role.position
+
                                 #Enter change for role    
                                 value_input = input("\nEnter Change:  ")                    
                                 value_input = value_input.strip()
@@ -253,8 +257,7 @@ def modify_volunteer():
                                     else:
                                         continue
                                 else:
-                                    if input_role:
-                                        changes["old"] = input_role
+                                    changes["old"] = input_role
                                     changes[key_input] = value_input    
                                     role_loop = False
                                     break
