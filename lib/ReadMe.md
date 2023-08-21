@@ -18,9 +18,11 @@ The Scheduler consist of 4 tables:
 - vol_id foreign key
 - role_id foreign key
 
+Because Schedule has a one-to-many relationship with Volunter and Role foreign keys were create for both tables to manage the relationship
+
 ## Volunteer
 
-- primary key
+- id primary key
 - first name
 - last name
 - username 
@@ -29,6 +31,14 @@ The Scheduler consist of 4 tables:
 - week
 - assigned
 
+ Besides a primary key the volunteer table has two relational fields. *roles* is used for managing the relationship between the Role and Volunteer tables through the association table, *Volunteers_Roles* 
+
+*schedules* is use is used to manage the relationship to between Schedule and Volunteer tables. 
+
+- roles = relationship('Role', secondary='volunteer_role',
+                          back_populates='volunteers')
+- schedules = relationship('Schedule', backref=backref('volunteer'))
+
 ## Role
 - id primary key
 - prayer 
@@ -36,11 +46,17 @@ The Scheduler consist of 4 tables:
 - welcome table 
 - usher
 
+Like the Volunteer table the Role table has two relational fields. *volunteers* which manages the relatationship between Role and Volunteer through the association table *Volunteer_Roles*
+
+*schedules* is used to manage the relationship between Schedule and the Role tables.
+
+- volunteers = relationship('Volunteer', secondary='volunteer_role',
+                          back_populates='roles')
+- schedules = relationship('Schedule', backref=backref('role'))
+
 ## volunter_Roles
 - vol_id foreign key
 - rol_id foreign key
 
-The Volunteer Table consist of one relatational
-
-Volunteer_Roles is a join or association table that joins Volunteers and Roles. It consist of a primary key and 
+Volunteer_Roles is an association table that manages the relationship between Volunteers and Roles. 
 
