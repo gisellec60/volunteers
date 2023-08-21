@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime, date
 from validate import Validate
 import random
+from prettycli import red, green, blue, color
 
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
@@ -181,7 +182,7 @@ class Schedule(Base):
         [session.delete(schedule) for schedule in volunteer.schedules if schedule.date == schedule_date]
         if(len(volunteer.schedules) == 1 ):
             volunteer.assigned = "No"
-        print(f"Removing {volunteer.first_name} {volunteer.last_name} from the schedule for {input_date}... ")
+        print(green(f"Removing {volunteer.first_name} {volunteer.last_name} from the schedule for {input_date}... "))
         session.commit()
 
     def swap(username, input_date, role, swap_name):
@@ -193,10 +194,10 @@ class Schedule(Base):
                Schedule.date == schedule_date, Schedule.role_id == role.id).one() 
         
         new_volunteer = session.query(Volunteer).filter(Volunteer.username == swap_name).one()
-        print(f'swapping {username} for {new_volunteer.username}...\n')
+        print(green(f'swapping {username} for {new_volunteer.username}...\n'))
         schedule.swappout_id = schedule.vol_id
         schedule.vol_id = new_volunteer.id 
-        print(f'NOTE: For historical purposes swapout_id contains id of {username}')
+        print(blue(f'NOTE: For historical purposes swapout_id contains id of {username}'))
        
         session.commit()
 
@@ -212,15 +213,15 @@ class Schedule(Base):
         for key,value in changes.items():
             if key == "username":
                user = session.query(Volunteer).filter(Volunteer.username == value ).first()
-               print(f'\nchanging username from {username} to {value}...\n') 
+               print(green(f'\nchanging username from {username} to {value}...\n')) 
                schedule.vol_id=user.id
             elif key == "role":
                 new_role = session.query(Role).filter(Role.position == value ).first()
-                print(f'\nchanging role from {role.position} to {new_role.position}...\n') 
+                print(green(f'\nchanging role from {role.position} to {new_role.position}...\n')) 
                 schedule.role_id=new_role.id
             else:
                 new_date = datetime.strptime(value,'%Y-%m-%d').date()
-                print(f'\nhanging date from {schedule_date} to {new_date}...\n') 
+                print(green(f'\n hanging date from {schedule_date} to {new_date}...\n')) 
                 schedule.date=new_date   
              
              
@@ -229,29 +230,36 @@ class Schedule(Base):
     def query_by_date(input_date):
         schedule_date = datetime.strptime(input_date, '%Y-%m-%d').date()
         schedules = session.query(Schedule).filter(Schedule.date == schedule_date).all()
-        
-        print (f"\nSchedule date: {input_date}\n")
-        for schedule in schedules:
-            volunteer = session.query(Volunteer).filter(Volunteer.id == schedule.vol_id).first()
-            role = session.query(Role).filter(Role.id == schedule.role_id).first()
-            print (f"{volunteer.first_name} {volunteer.last_name}: {role.position}")
+       
+        if len(schedules) == 0:
+            print (red(f"\nSchedule date: {input_date}\n"))
+            print (red("<---No schedule--->"))
+        else:  
+            print (green(f"\nSchedule date: {input_date}\n"))  
+            for schedule in schedules:
+                volunteer = session.query(Volunteer).filter(Volunteer.id == schedule.vol_id).first()
+                role = session.query(Role).filter(Role.id == schedule.role_id).first()
+                print (green(f"{volunteer.first_name} {volunteer.last_name}: {role.position}"))
 
     def query_by_name(username):
         volunteer = session.query(Volunteer).filter(Volunteer.username == username).first()  
         volunteers = session.query(Volunteer).all()
         roles = session.query(Role).all()
-                
-        print(f"\n{volunteer.first_name} {volunteer.last_name} \n")
 
-        for schedule in volunteer.schedules:
-            for role in roles:
-                if role.id == schedule.role_id:
-                    if schedule.swappout_id:
-                        for vol in volunteers:
-                            if vol.id == schedule.swappout_id:
-                                print(schedule.date.strftime("%B %d, %Y"),":" + role.position, "<" + vol.username + ">")
-                    else:
-                        print(schedule.date.strftime("%B %d, %Y"), ":" + role.position)  
+        if volunteer.assigned == "No":
+            print(red(f"\n{volunteer.first_name} {volunteer.last_name} \n"))
+            print (red("<---No schedule--->"))
+        else:
+            print(green(f"\n{volunteer.first_name} {volunteer.last_name} \n"))
+            for schedule in volunteer.schedules:
+                for role in roles:
+                    if role.id == schedule.role_id:
+                        if schedule.swappout_id:
+                            for vol in volunteers:
+                                if vol.id == schedule.swappout_id:
+                                    print(schedule.date.strftime("%B %d, %Y"),":" + role.position, "<" + vol.username + ">")
+                        else:
+                            print(schedule.date.strftime("%B %d, %Y"), ":" + role.position)  
                            
     def __repr__(self):
         return f'Schedule: {self.id}, ' + \

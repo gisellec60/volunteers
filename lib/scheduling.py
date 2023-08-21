@@ -9,7 +9,7 @@ import click
 import ipdb
 from datetime import datetime, date
 from simple_term_menu import TerminalMenu
-from prettycli import red, yellow
+from prettycli import red, green
 
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
@@ -61,9 +61,9 @@ def add_week():
         week = input ("\nEnter week of month to serve  [1-5]: ")
         if week.upper() == "X":
             break
-        week_valid=Validate.validate_floater(week)
+        week_valid=Validate.validate_week(week)
         if not week_valid :
-            print("\n",Validate.week_error_message,"\n")
+            print(red("\nWeek must be an integer 1-5\n"))
             week = input("\nHit Enter to try again or x to quit: ")
             if week.upper() == "X":
                 week_loop = False
@@ -83,7 +83,7 @@ def add_position():
         else:
             position_valid=Validate.validate_role(position)
             if not position_valid :
-                print("\n",Validate.role_error_message,"\n")
+                print(red(f"\n{position} is not a valid role!\n"))
                 if position.upper() == "X":
                     position_loop = False
                     break
@@ -127,7 +127,7 @@ def add_volunteer():
                 if fname_valid:
                     fname_loop = False
                 else:    
-                    print("\n",Validate.name_error_message,"\n")
+                    print(red("\nFirst and last name can only consist of A-z ,-,'.\n"))
                     fname = input("Enter to try again or x to quit ")
                     if fname.upper() == "X":
                          break
@@ -150,7 +150,7 @@ def add_volunteer():
                     lname_loop = False
                     break
                 else:    
-                    print("\n",Validate.name_error_message,"\n")
+                    print(red("\nFirst and last name can only consist of A-z ,-,'.\n"))
                     lname = input("Hit enter to try again or x to quit ")
                     if lname.upper() == "X":
                         break
@@ -170,7 +170,7 @@ def add_volunteer():
             else:
                 email_exist = session.query(Volunteer).filter(Volunteer.email == email).first()
                 if email_exist:
-                    print(f"{email} already exist")
+                    print(red(f"\n{email} already exist\n"))
                     email = input("\nHit enter to try again or x to quit ")
                     if email.upper() == "X":
                        break
@@ -182,7 +182,7 @@ def add_volunteer():
                         email_loop = False
                         break
                     else:
-                        email = input(f"\n{email} is invalid. Hit enter to try again or x to quit ") 
+                        email = input(red(f"\n{email} is invalid. Hit enter to try again or x to quit ")) 
                         if email.upper() == "X":
                                break
                         else:
@@ -201,7 +201,7 @@ def add_volunteer():
                 break
             phone_valid=Validate.validate_phone(phone) 
             if not phone_valid:
-                print("\n",Validate.phone_error_message,"\n")
+                print(red("\nPhone number is invalid\n"))
                 phone = input(f"\nHit enter to try again or x to quit ")
                 if email.upper() == "X":
                     phone_loop = False
@@ -226,7 +226,7 @@ def add_volunteer():
                 floater_loop = False
                 break
             else:
-                print("\n",Validate.floater_error_message,"\n")
+                print(red("\nFloater value: Y or N\n"))
                 floater_input = input(f"Hit enter to try again or x to quit ")
                 if floater_input.upper() == "X":
                     floater_loop = False
@@ -253,7 +253,7 @@ def add_volunteer():
         break 
 
     volunteer = Volunteer.add_volunteer(fname, lname, email, phone, floater , week, position )
-    print(f"\n{fname} {lname} <usrname: {volunteer.username}> added to the schedule as a {position}")
+    print(green(f"\n{fname} {lname} <usrname: {volunteer.username}> successfully added to the schedule as a {position}"))
     keep_output_on_screen()
     clear_screen() 
        
