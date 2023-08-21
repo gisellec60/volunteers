@@ -224,7 +224,6 @@ class Schedule(Base):
                 print(green(f'\n hanging date from {schedule_date} to {new_date}...\n')) 
                 schedule.date=new_date   
              
-             
         session.commit()
         
     def query_by_date(input_date):

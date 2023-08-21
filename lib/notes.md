@@ -75,7 +75,8 @@ Check for duplicate username
 pipenv install alembic sqlalchemy==1.4.41
 pipenv install faker
 pip install simple-term-menu
-
+ pip install prettycli
+ 
 Things to cleanup
     commented out
     print statements
