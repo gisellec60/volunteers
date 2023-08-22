@@ -8,7 +8,7 @@ from model import  Volunteer, Role, Schedule, Validate
 import re
 from datetime import datetime, date
 from simple_term_menu import TerminalMenu
-from prettycli import red, green, blue
+from prettycli import red, green, blue, yellow
 
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
@@ -53,7 +53,6 @@ def validate(field, field_input):
         if field_input in ['Y','y','n','N']:
             return True    
     elif field == "phone":
-        print("are you getting here")
         phone_pattern = r"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$"
         regex = re.compile(phone_pattern)
         match = regex.fullmatch(field_input)
@@ -114,6 +113,7 @@ def get_volunteer_information(field, input_message, error_message):
 ###################################################################################
 
 def add_volunteer():
+    print(red(add_banner))
     x=True
     complete = False
     while x:
@@ -148,7 +148,6 @@ def add_volunteer():
            break 
  
         week = get_volunteer_information("week", week_input_message,week_error_message)
-        print(week)
         if week == "X" or week == "x":
            x=False
            clear_screen()
@@ -162,12 +161,12 @@ def add_volunteer():
 
     if complete: 
         volunteer = Volunteer.add_volunteer(fname, lname, email, phone, floater , week, role )
-        print(green(f"\n{fname} {lname} <usrname: {volunteer.username}> successfully added to the schedule as a {role}"))
+        print(green(f"\n{fname} {lname} <usrname: {volunteer.username}> successfully added to the Scheduler as a {role}"))
         keep_output_on_screen()
         clear_screen() 
 
 def delete_volunteer():
-    print(delete_banner)
+    print(red(delete_volunteer_banner))
     x=True
     while x:
         username = Validate.username_input()
@@ -179,7 +178,7 @@ def delete_volunteer():
             # user_exist = session.query(Volunteer).filter(Volunteer.username == username).first()
             volunteer = user_exist(username)
             if volunteer:
-                print(green(f'\n{volunteer.first_name} {volunteer.last_name} {username} was successfully deleted\n'))
+                print(green(f'\n{volunteer.first_name} {volunteer.last_name} <username: {username}> was successfully deleted\n'))
                 Volunteer.delete_volunteer(username)
                 keep_output_on_screen()
                 clear_screen() 
@@ -191,7 +190,7 @@ def delete_volunteer():
                     break
 
 def modify_volunteer():
-    print(modify_banner)
+    print(red(modify_banner))
     x=True
     changes={}
     while x:
@@ -237,7 +236,7 @@ def modify_volunteer():
                                             continue 
                                 #else just grab the one role
                                 else: 
-                                    for role in user_roles:
+                                    for role in volunteer.roles:
                                         input_role = role.position
 
                                 #Enter change for role    
@@ -311,8 +310,7 @@ def modify_volunteer():
                     continue
 
 def add_to_schedule():
-    clear_screen() 
-    print(add_schedule_banner)
+    print(red(add_schedule_banner))
     x=True
     sched_loop = False
     while x:
@@ -354,7 +352,8 @@ def add_to_schedule():
                                 clear_screen()
                                 break    
                         else:
-                            user_input = input(red(f"{username} does not volunteer as a {role_input}. Would you like to enter another role? Y/N "))  
+                            print(red(f"\n{username} does not volunteer as a {role_input}")) 
+                            user_input = input("\nWould you like to enter another role? Y/N ")  
                             user_input = user_input.strip()
                             if user_input.upper() == "N":
                                 x = False
@@ -381,7 +380,7 @@ def add_to_schedule():
                     break
 
 def modify_schedule():
-    print(modify_schedule_banner)
+    print(red(modify_schedule_banner))
     changes = {}
     user_loop = True
     x=True
@@ -526,6 +525,7 @@ def modify_schedule():
         break
 
 def delete_schedule():
+    print(red(delete_schedule_banner))
     x=True
     while x:
         username=Validate.username_input()
@@ -547,6 +547,7 @@ def delete_schedule():
                 while date_loop:
                     input_date = input("\nEnter valid date YYYY-MM-DD: ")
                     valid_date = Validate.validate_date(input_date) 
+                    
                     if valid_date:
                         print("\n")
                         Schedule.delete_schedule(username,input_date)
@@ -567,7 +568,7 @@ def delete_schedule():
                             continue  
 
 def print_schedule_by_name():
-    print(query_by_name_banner)
+    print(red(query_by_name_banner))
     x=True
     while x:
         username=Validate.username_input()
@@ -592,7 +593,7 @@ def print_schedule_by_name():
                 
 
 def print_schedule_by_date():
-    #print(query_by_date_banner)
+    print(red(query_by_date_banner))
     x=True
     while x:
         date_input = input("Enter x to quit or a valid date YYY-MM-DD: ")
@@ -628,7 +629,14 @@ welcome_banner = '''
   WELCOME TO The Scheduler
 *****************************
 '''
-delete_banner = '''
+
+add_banner = '''
+=========================
+    Add Volunteer
+=========================
+'''
+
+delete_volunteer_banner = '''
 =========================
     Delete Volunteer
 =========================
@@ -656,9 +664,15 @@ modify_schedule_banner = '''
    Modify Schedule
 =============================
 '''
+delete_schedule_banner = '''
+=============================
+   Delete Schedule
+=============================
+'''
+
 query_by_date_banner = '''
 ============================= 
-   Query Schedule by Name
+   Query Schedule by Date
 =============================
 '''
 
