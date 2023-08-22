@@ -665,7 +665,7 @@ query_by_date_banner = '''
 def main():
     quitting = False
     while quitting == False:
-        print(blue(welcome_banner))
+        print(welcome_banner)
         options = ["Add Volunteer", "Delete Volunteer", "Modify Volunteer", "Add Schedule", "Modify Schedule", "Delete Schedule","Print Schedule by Date","Print Schedule by Name","Quit"]
         terminal_menu = TerminalMenu(options)
         options_index = terminal_menu.show()

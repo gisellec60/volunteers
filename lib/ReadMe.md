@@ -1,6 +1,6 @@
-#The Scheduler
+# The Scheduler
 
-***The Scheduler*** born out of the need for a more robust volunteer scheduling system for my church. The app manages the scheduling of the volunteer for the church by enabling a user to add, modify, and delete a volunteer and/or schedule and query the schedule by date and/or username. Ideally only people with admin privileges will be able to make any changes to the schedule. However, everyone will be able to query the schedule by date and username. Currently there are no admin privileges set for the app so everyone has full access.
+***The Scheduler*** was born out of the need for a more robust volunteer scheduling system for my church. The app manages the scheduling of the volunteer for the church by enabling a user to add, modify, and delete a volunteer and/or schedule and query the schedule by date and/or username. Ideally only people with admin privileges will be able to make any changes to the schedule. However, everyone will be able to query the schedule by date and username. Currently there are no admin privileges set for the app so everyone has full access.
 
 The Scheduler consist of 4 tables: 
 - Volunteer
@@ -60,3 +60,6 @@ Like the Volunteer table the Role table has two relational fields. *volunteers* 
 
 Volunteer_Roles is an association table that manages the relationship between Volunteers and Roles. 
 
+The Scheduler is a CLi app so the user interacts with it from the command line. The cli file that envokes the scheduler is...wait for it...*scheduling.py*
+
+![Alt Text](pictures/scheduler.png)
