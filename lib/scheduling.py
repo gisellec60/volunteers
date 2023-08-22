@@ -547,18 +547,30 @@ def delete_schedule():
                 while date_loop:
                     input_date = input("\nEnter valid date YYYY-MM-DD: ")
                     valid_date = Validate.validate_date(input_date) 
-                    
                     if valid_date:
-                        print("\n")
-                        Schedule.delete_schedule(username,input_date)
-                        print(green(f"\n{volunteer.first_name} {volunteer.last_name} has been successfully removed from the schedule for {input_date}\n"))
-                        keep_output_on_screen()
-                        date_loop = False
-                        x = False
-                        clear_screen()
-                        break
+                        schedule = session.query(Schedule).filter(Schedule.date == input_date, Schedule.vol_id == volunteer.id).first()
+                        if schedule:
+                            print("\n")
+                            Schedule.delete_schedule(username,input_date)
+                            print(green(f"\n{volunteer.first_name} {volunteer.last_name} has been successfully removed from the schedule for {input_date}\n"))
+                            keep_output_on_screen()
+                            date_loop = False
+                            x = False
+                            clear_screen()
+                            break
+                        else:
+                            print(red(f"\nThere is no schedule for {volunteer.first_name} {volunteer.last_name} on {input_date}"))
+                            user_continue = input("\nHit enter to re-enter date for x to quit ")
+                            if user_continue.upper() == "X":
+                                date_loop = False
+                                x = False
+                                clear_screen()
+                                break
+                            else:
+                                continue  
                     else:
-                        user_continue = input(red(f"\n{input_date} is not a valid date. Would you like to enter another date Y/N? "))
+                        print(red(f"\n{input_date} is not a valid date."))
+                        user_continue = input ("\nWould you like to enter another date Y/N? ")
                         if user_continue.upper() == "N":
                             date_loop = False
                             x = False
@@ -585,7 +597,8 @@ def print_schedule_by_name():
                 clear_screen()
                 break    
             else:
-                user_continue = input(red(f"{username} does not exist.  Would you like to enter another username? Y/N "))    
+                print(red(f"\n{username} does not exist."))
+                user_continue = input ("\nWould you like to enter another username? Y/N ")    
                 if user_continue.upper() == "N":
                     x=False
                     clear_screen()

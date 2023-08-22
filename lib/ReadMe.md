@@ -150,9 +150,60 @@ Now let's check the Schedule to make sure the date has been changed.
 ![Alt Text](pictures/Sched_Modified.png)
 
 Yes! The date was changed from 2023-09-03 to 2023-09-10
+Make note of the shedule id 54
 
 ## Delete Schedule
 
-The church will not need an usher on 2023-09-10 so we will delete Mary's schedule. 
+Mary decided she wants to be removed from the schedule for that day.  
 
+![Alt Text](pictures/del_schedule.png)
+
+Someone forgot Mary had previously changed her date from Sept 3 to Sept 10.
+
+![Alt Text](pictures/correct_wrong_date.png)
+ 
+ Schedule was removed for Mary for Sep 10.
+
+ ![Alt Text](pictures/sched_removed.png)
+
+ Notice the schedule id *54* is now gone from the schedule table. 
+
+ ## Query Schedule by Date
+
+ Let's see if anyone else is scheduled for Sep 10:
+
+ ![Alt Text](pictures/by_date_empty.png)
+
+ Let's use a date that actually has somone scheduled:
+
+ ![Alt Text](pictures/by_date_good.png)
+
+ Great!!!
+
+ Now let see if Mary is on the schedule
+
+ ![Alt Text](pictures/by_name_empty.png)
+
+ Oops! I misspelled her name but the app allowed me to re-enter. As we see Mary does is not on the schedule at all.
+
+ Lets see if Kara Rivera is scheduled to serve:
+
+  ![Alt Text](pictures/by_name_good.png)
+
+  Here the one-to-many relationship is clearly seen between the volunteer and the schedule and the role and the schedule . Kara is serving in multiple roles on multiple dates. 
+
+## What's Next?
+
+ There were features planned but not implemented due to time constraints and the scope of the project:
+
+ **Swap** - Notice the schedule has a swapp_id field. Sometimes volunteers swap dates. For historical purposes swapp_id would hold the id of the volunteer who was swapped out. 
+
+ **Delete All from Schedule** - There may be a time when the user will want to removed the schedule for a particular date. For instance if church service was canceled or someone enter a bunch of volunteers for the wrong day.  
+
+ **Add Role** - There may be a need to add a role for a special event. 
+
+ **Delete Role** - We may need to remove that role once the even was over.
+
+ This ended up being much bigger than I thought. I don't know that I would would add those features to this project just because its a CLI.  I believe a project like this warrants a more robust interface type of structure. Who knows, maybe Flatiron will allow me to redo this project in its entirety for my capstone project! Hey one could hope!!!
+ 
 
