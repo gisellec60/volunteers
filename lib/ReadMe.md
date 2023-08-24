@@ -1,4 +1,5 @@
 # The Scheduler 
+![Alt Text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ44Mv9l14uBnelUF6svssPE5YhLgZ6WZTgRQ&usqp=CAU)
 
 ***The Scheduler*** was born out of the need for a more robust volunteer scheduling system for my church. The app manages the scheduling of the volunteers by enabling a user to add, modify, and delete a volunteer or schedule, and query the schedule by date or username. Ideally only people with admin privileges will be able to make any changes to the schedule however, everyone will be able to query the schedule by date and username. Currently there are no admin privileges set for the app so everyone has full access.
 
@@ -163,6 +164,10 @@ There are a lot of moving parts to this app because of the validation needed to 
  **Delete Role** - We may need to remove that role once the even was over.
 
  This ended up being much bigger than I thought. I'm not sure that I would add those features to this project just because its a CLI.  I believe a project like this warrants a more robust, user friendly type of interface. Who knows, maybe Flatiron will allow me to redo this project in its entirety for my capstone project! Hey, one could hope!!!
+
+## Blog
+
+If you're curious about the technical aspects of the The Scheduler check out my blog The Scheduler
 
 ## Update
 
