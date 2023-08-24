@@ -153,13 +153,11 @@ There are a lot of moving parts to this app because of the validation needed to 
 
 ## What's Next?
 
- There were features planned but not implemented due to time constraints and the scope of the project:
+ if you look in model.py You will see 3 methods that are not on the menu. I left them off because of the scope of the project. Though they're already coded and working I still would need to put in the cli code to handle them. The cli already has over 700 lines of code and I didn't want to add more for my instructors to evaluate You're welcomed!!!
 
  **Swap** - Notice the schedule has a swapp_id field. Sometimes volunteers swap dates. For historical purposes swapp_id would hold the id of the volunteer who was swapped out. 
 
- **Delete All from Schedule** - There may be a time when the user will want to removed the schedule for a particular date. For instance if church service was canceled or someone enter a bunch of volunteers for the wrong day.  
-
- **Add Role** - There may be a need to add a role for a special event. 
+  **Add Role** - There may be a need to add a role for a special event. 
 
  **Delete Role** - We may need to remove that role once the even was over.
 
