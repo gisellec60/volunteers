@@ -165,7 +165,7 @@ There are a lot of moving parts to this app because of the validation needed to 
 
 ## Blog
 
-For a deep dive into The Scheduler please checkout my blog ![Atl Text](https://dev.to/gisellec60/the-scheduler-hc7)
+For a deep dive into The Scheduler please checkout my blog [The Scheduler](https://dev.to/gisellec60/the-scheduler-hc7)
 
 ## Update
 
