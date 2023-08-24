@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 
 from sqlalchemy import create_engine
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import declarative_base
-from model import  Volunteer, Role, Schedule, Validate
+from model import  Volunteer, Schedule, Validate
 import re
-from datetime import datetime, date
 from simple_term_menu import TerminalMenu
-from prettycli import red, green, blue, yellow
+from prettycli import red, green
 
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)

@@ -10,8 +10,6 @@ Two methods use this code.  Can I refactor it?
 
 Make sure to add print statements for the methods.
 
-Fix schedule dates so they are only on sundays.
-
 CLI 
 Validatons:
 

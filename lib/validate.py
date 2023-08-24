@@ -1,15 +1,10 @@
-from datetime import datetime, date
 import re
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
-# from model import Volunteer, Role, Schedule
-
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
 session = Session()
-
-
 
 class Validate():
    
@@ -47,26 +42,6 @@ class Validate():
             if field in valid_fields:
                 return True    
            
-    def list_volunteer_roles(username,role):
-        role_list=[]
-        volunteer = session.query(Volunteer).filter(Volunteer.username == username)
-        for role in volunteer.roles:
-           role_list.append(role.position)
-        return role_list        
-    
-    def list_volunteer_schedules(username,date):
-        schedule_date = datetime.strptime(date, '%Y-%m-%d').date()
-        schedule_list = []
-        volunteer = session.query(Volunteer).filter(Volunteer.username == username)
-        for schedule in volunteer.schedules:
-            if schedule.date == schedule_date:
-               schedule_list.append(schedule)
-        return schedule_list
-     
-    def user_exist(username):
-        volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
-        return volunteer
-    
     def validate_floater(floater):
         floater_is_good = "Yes"
         if floater != True and floater != False:
@@ -81,8 +56,6 @@ class Validate():
         return match
     
     def validate_date(date):
-        # schedule_date_pattern = r"^202[3-9]-(0[1-9]|1[1,2])-(0[1-9]|[12][0-9]|3[01])$"
-        # schedule_date_pattern = r"^202[3-9]-(0[9,4,6]|[11])-(0[1-9]|[12][0-9]|3[0])|^202[3-9]-(0[1,3,5,7,8]|1[0,2])-(0[1-9]|[1,2][0-9]|3[1])$"
         schedule_date_pattern = r"^202[3-9]-(0[9,4,6]|1[1])-(0[1-9]|[1,2][0-9]|3[0])|^202[3-9]-(0[1,3,5,7,8]|1[0,2])-(0[1-9]|[1,2][0-9]|3[1])$"
         regex = re.compile(schedule_date_pattern)
         match = regex.fullmatch(date)

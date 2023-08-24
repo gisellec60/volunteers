@@ -1,6 +1,3 @@
-from faker import Faker
-import random
-from random import choice as rc
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
