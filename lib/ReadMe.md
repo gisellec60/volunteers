@@ -65,7 +65,7 @@ Like the Volunteer table the Role table has two relational fields.
 
 Volunteer_Roles is an association table that manages the relationship between Volunteers and Roles. 
 
-The Scheduler is a Command Line Interface or *cli* app enabling the user interacts with it from the command line. The cli file that envokes the scheduler is **scheduling.py**
+The Scheduler is a Command Line Interface or *cli* app enabling the user to interact with it from the command line. The cli file that envokes the scheduler is **scheduling.py**
 
 ![Alt Text](pictures/scheduler.png)
 
@@ -153,11 +153,9 @@ There are a lot of moving parts to this app because of the validation needed to 
 
 ## What's Next?
 
- There were features planned but not implemented due to time constraints and the scope of the project:
+ if you look in model.py You will see 3 methods that are not on the menu. I left them off because of the scope of the project. Though they're already coded and working I still would need to put in the cli code to handle them. The cli already has over 700 lines of code and I didn't want to add more for my instructors to evaluate ***You're welcomed!!!***  
 
- **Swap** - Notice the schedule has a swapp_id field. Sometimes volunteers swap dates. For historical purposes swapp_id would hold the id of the volunteer who was swapped out. 
-
- **Delete All from Schedule** - There may be a time when the user will want to removed the schedule for a particular date. For instance if church service was canceled or someone enter a bunch of volunteers for the wrong day.  
+ **Swap** - Notice the schedule has a swapp_id field.  Sometimes volunteers swap dates. For historical purposes swapp_id holds the id of the volunteer who was swapped out. 
 
  **Add Role** - There may be a need to add a role for a special event. 
 
@@ -167,11 +165,15 @@ There are a lot of moving parts to this app because of the validation needed to 
 
 ## Blog
 
-If you're curious about the technical aspects of the The Scheduler check out my blog The Scheduler
+For a deep dive into The Scheduler please checkout my blog ![Atl Text](https://dev.to/gisellec60/the-scheduler-hc7)
 
 ## Update
 
 Since this writing I've changed the banner of the app just for fun. However, the functionality has not changed so the app still works as described above.
 
 ![Alt Text](pictures/new.png)
+
+<video src="Media/scheduler.mp4" controls title="Title"></video>
+
+
 
