@@ -12,19 +12,7 @@ session = Session()
 
 
 class Validate():
-
-    name_error_message="First and last name can only consist of A-z ,-,'."
-    email_error_message="Please enter a valid email"
-    phone_error_message="Please enter a valid phone number"
-    role_error_message="role does not exist"
-    user_exist_error_message="username does not exist"
-    floater_error_message="Floater value: Y or N"
-    week_error_message="Week must be an integer 1-5"
-    date_error_message=f"Please enter a valid date: YYY-MM-DD "
-    
-    def clear_screen():
-        print("\n" * 40)
-
+   
     def validate_name(name):
         name_pattern =  r"[A-z'-]+$"
         regex = re.compile(name_pattern)

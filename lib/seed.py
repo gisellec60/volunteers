@@ -38,7 +38,7 @@ def create_volunteers():
            username = username,
            week = random.randint(1,4),
            floater = fake.boolean(chance_of_getting_true=9),
-           assigned = "No"
+           assigned = "Yes"
        )
         
         session.add(volunteer)   
@@ -105,11 +105,10 @@ def relate_vol_pos(volunteers,roles):
                 session.commit()
 
 def populate_assign(volunteers):
-     
      for volunteer in volunteers:
-        if volunteer.schedules:
-            volunteer.assigned = "Yes"
-     session.commit()
+        if not volunteer.schedules:
+            volunteer.assigned = "No"
+            session.commit()
 
 if __name__ == '__main__':
     delete_records()
