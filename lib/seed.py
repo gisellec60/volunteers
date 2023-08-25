@@ -38,7 +38,7 @@ def create_volunteers():
            username = username,
            week = random.randint(1,4),
            floater = fake.boolean(chance_of_getting_true=9),
-           assigned = "Yes"
+           assigned = "No"
        )
         
         session.add(volunteer)   
@@ -79,6 +79,7 @@ def populate_schedule(volunteers,roles,schedules):
     for schedule in schedules:
         schedule.role = rc(roles)
         schedule.volunteer = rc(volunteers)
+        schedule.volunteer.assigned = "Yes"
        
     session.add_all(schedules) 
     session.commit()
@@ -106,8 +107,8 @@ def relate_vol_pos(volunteers,roles):
 
 def populate_assign(volunteers):
      for volunteer in volunteers:
-        if not volunteer.schedules:
-            volunteer.assigned = "No"
+        if volunteer.schedules:
+            volunteer.assigned = "Yes"
             session.commit()
 
 if __name__ == '__main__':
@@ -115,8 +116,9 @@ if __name__ == '__main__':
     roles = create_roles()
     volunteers = create_volunteers()
     schedules = create_schedules()
-    volunteers,roles,schedules = populate_schedule(volunteers,roles,schedules)
+    populate_swappout(schedules)
+    populate_schedule(volunteers,roles,schedules)
     floater_setting(volunteers)
     relate_vol_pos(volunteers,roles)
-    populate_assign(volunteers)
-    populate_swappout(schedules)
+    # populate_assign(volunteers)
+  
