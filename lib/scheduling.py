@@ -5,16 +5,26 @@ from sqlalchemy.orm import sessionmaker
 from model import  Volunteer, Schedule, Validate
 from simple_term_menu import TerminalMenu
 from prettycli import red, green
-
+from user_functions import (
+    clear_screen, user_exist,
+    keep_output_on_screen
+)
+from messages import(
+    fname_input_message, lname_input_message, name_error_message,
+    email_error_message, email_input_message, phone_error_message,
+    phone_input_message, role_error_message, role_input_message, 
+    floater_error_message, floater_input_message, week_error_message, 
+    week_input_message 
+)
 engine = create_engine('sqlite:///volunteers.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 
 ############################### Helper Functions #####################################################
 
-def user_exist(username):
-        volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
-        return volunteer 
+# def user_exist(username):
+#         volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
+#         return volunteer 
 
 def get_volunteer_information(field, input_message, error_message):
     loop = True
@@ -46,43 +56,43 @@ def add_volunteer():
     x=True
     complete = False
     while x:
-        fname = get_volunteer_information("fname", Validate.fname_input_message, Validate.name_error_message)
+        fname = get_volunteer_information("fname", fname_input_message, name_error_message)
         if fname == "X" or fname == "x":
-           Validate.clear_screen()          
+           clear_screen()          
            x=False
            break 
 
-        lname = get_volunteer_information("lname", Validate.lname_input_message, Validate.name_error_message)
+        lname = get_volunteer_information("lname", lname_input_message, name_error_message)
         if lname == "X" or lname == "x":
-           Validate.clear_screen()
+           clear_screen()
            x=False
            break 
 
-        email = get_volunteer_information("email", Validate.email_input_message, Validate.email_error_message)
+        email = get_volunteer_information("email", email_input_message, email_error_message)
         if email == "X" or email == "x":
-           Validate.clear_screen()
+           clear_screen()
            x=False
            break 
 
-        phone = get_volunteer_information("phone", Validate.phone_input_message, Validate.phone_error_message)
+        phone = get_volunteer_information("phone", phone_input_message, phone_error_message)
         if phone == "X" or phone == "x":
-           Validate.clear_screen()
+           clear_screen()
            x=False
            break 
 
-        floater = get_volunteer_information("floater", Validate.floater_input_message, Validate.floater_error_message)
+        floater = get_volunteer_information("floater", floater_input_message, floater_error_message)
         if floater == "X"or floater == "x":
-           Validate.clear_screen()
+           clear_screen()
            x=False
            break 
  
-        week = get_volunteer_information("week", Validate.week_input_message,Validate.week_error_message)
+        week = get_volunteer_information("week", week_input_message, week_error_message)
         if week == "X" or week == "x":
            x=False
-           Validate.clear_screen()
+           clear_screen()
            break 
  
-        role = get_volunteer_information("role", Validate.role_input_message, Validate.role_error_message)
+        role = get_volunteer_information("role", role_input_message, role_error_message)
         if role:
            complete = True 
         x=False
@@ -91,8 +101,8 @@ def add_volunteer():
     if complete: 
         volunteer = Volunteer.add_volunteer(fname, lname, email, phone, floater , week, role )
         print(green(f"\n{fname} {lname} <usrname: {volunteer.username}> successfully added to the Scheduler as a {role}"))
-        Validate.keep_output_on_screen()
-        Validate.clear_screen()
+        keep_output_on_screen()
+        clear_screen()
 
 def delete_volunteer():
     print(red(delete_volunteer_banner))
@@ -100,7 +110,7 @@ def delete_volunteer():
     while x:
         username = Validate.username_input()
         if username.upper() == "X":
-           Validate.clear_screen()
+           clear_screen()
            x=False
            break
         else:
@@ -108,13 +118,13 @@ def delete_volunteer():
             if volunteer:
                 print(green(f'\n{volunteer.first_name} {volunteer.last_name} <username: {username}> was successfully deleted\n'))
                 Volunteer.delete_volunteer(username)
-                Validate.keep_output_on_screen()
-                Validate.clear_screen()
+                keep_output_on_screen()
+                clear_screen()
                 break
             else:
                 username = input(red(f'\n{username} does not exist. Enter a valid username or x to quit '))    
                 if username.upper() == "X":
-                    Validate.clear_screen()
+                    clear_screen()
                     break
 
 def modify_volunteer():
@@ -124,7 +134,7 @@ def modify_volunteer():
     while x:
         username = input("Enter username or X to quit: ")
         if username.upper() == "X":
-           Validate.clear_screen()
+           clear_screen()
            break
         else:
             volunteer = user_exist(username)
@@ -158,7 +168,7 @@ def modify_volunteer():
                                             x=False
                                             loop = False
                                             role_loop = False
-                                            Validate.clear_screen()
+                                            clear_screen()
                                             break
                                         else:
                                             continue 
@@ -179,7 +189,7 @@ def modify_volunteer():
                                         x=False
                                         role_loop=False
                                         loop = False
-                                        Validate.clear_screen()
+                                        clear_screen()
                                         break
                                     else:
                                         continue
@@ -200,7 +210,7 @@ def modify_volunteer():
                         if user_continue.upper() == "X":
                             loop = False
                             x=False
-                            Validate.clear_screen()
+                            clear_screen()
                             break
                         else:
                              continue
@@ -222,8 +232,8 @@ def modify_volunteer():
 
                     Volunteer.modify_volunteer(username,changes)   
                     print(green("\nChange was sucessful"))
-                    Validate.keep_output_on_screen()
-                    Validate.clear_screen()
+                    keep_output_on_screen()
+                    clear_screen()
                     break
 
             else: #if username is valid
@@ -232,7 +242,7 @@ def modify_volunteer():
                 user_input = user_input.strip()
                 if user_input.upper() == "X":
                     x=False
-                    Validate.clear_screen()
+                    clear_screen()
                     break
                 else:
                     continue
@@ -244,14 +254,14 @@ def add_to_schedule():
     while x:
         username = input("Enter username or X to quit: ")
         if username.upper() == "X":
-           Validate.clear_screen()
+           clear_screen()
            break
         else:
             volunteer = user_exist(username)
             if volunteer:
                 sched_loop = True
                 while sched_loop:
-                    role_input = input("Enter role: ")
+                    role_input = input("\nEnter role: ")
                     role_input = role_input.strip()
                     role_valid = Validate.validate_role(role_input)
                     if role_valid: 
@@ -260,25 +270,32 @@ def add_to_schedule():
                             if role.position == role_input:
                                 role_found = True
                         if role_found:
-                            input_date = input("Enter date: YYY-MM-DD: ")
-                            input_date = input_date.strip()
-                            valid_date = Validate.validate_date(input_date) 
-                            if valid_date == None:
-                                print(red(f"\n{input_date} is an invalid date\n"))
-                                user_continue=input('Would you like to continue? Y/N ')
-                                if user_continue == "N" or user_continue == "n":
-                                    sched_loop=False
-                                    x=False
-                                    Validate.clear_screen()
-                                    break
-                            else:
-                                print("\nSchedule updating...")
-                                Schedule.add_to_schedule(username, role_input, input_date)   
-                                print(green(f"{username} added as a {role_input} to the schedule for {input_date}"))
-                                Validate.keep_output_on_screen()
-                                x=False
-                                Validate.clear_screen()
-                                break    
+                            date_loop = True
+                            while date_loop:
+                                input_date = input("\nEnter date: YYY-MM-DD: ")
+                                input_date = input_date.strip()
+                                valid_date = Validate.validate_date(input_date) 
+                                if not valid_date:
+                                    print(red(f"\n{input_date} is an invalid date\n"))
+                                    user_continue=input('Would you like to continue? Y/N ')
+                                    if user_continue == "N" or user_continue == "n":
+                                        sched_loop=False
+                                        date_loop=False
+                                        x=False
+                                        clear_screen()
+                                        break
+                                    else:
+                                        continue
+                                else:
+                                    date_loop=False
+                                    break    
+                            print("\nSchedule updating...")
+                            Schedule.add_to_schedule(username, role_input, input_date)   
+                            print(green(f"{username} added as a {role_input} to the schedule for {input_date}"))
+                            keep_output_on_screen()
+                            x=False
+                            clear_screen()
+                            break    
                         else:
                             print(red(f"\n{username} does not volunteer as a {role_input}")) 
                             user_input = input("\nWould you like to enter another role? Y/N ")  
@@ -286,7 +303,7 @@ def add_to_schedule():
                             if user_input.upper() == "N":
                                 x = False
                                 sched_loop = False
-                                Validate.clear_screen()
+                                clear_screen()
                                 break
                             else:
                                 continue
@@ -295,7 +312,7 @@ def add_to_schedule():
                         role_input = role_input.strip()
                         if role_input.upper() == "N":
                             x=False
-                            Validate.clear_screen()
+                            clear_screen()
                             break
                         else:
                             continue
@@ -304,7 +321,7 @@ def add_to_schedule():
                 user_input = user_input.strip()
                 if user_input.upper() == "N":
                     x=False
-                    Validate.clear_screen()
+                    clear_screen()
                     break
 
 def modify_schedule():
@@ -317,7 +334,7 @@ def modify_schedule():
         username = username.strip()
         if username.upper() == "X":
            x=False
-           Validate.clear_screen()
+           clear_screen()
            break
         else:
             volunteer = user_exist(username)
@@ -325,7 +342,7 @@ def modify_schedule():
                 user_continue = input(red(f"{username} does not exit. Would you like to enter another username Y/N? "))
                 if user_continue.upper() == "N":
                     x=False
-                    Validate.clear_screen()
+                    clear_screen()
                     break
                 else:
                     continue
@@ -349,7 +366,7 @@ def modify_schedule():
                                 if user_quit.upper() == "N":
                                     user_loop = False
                                     x = False
-                                    Validate.clear_screen()
+                                    clear_screen()
                                     break
                                 else:
                                     user_loop = False
@@ -367,7 +384,7 @@ def modify_schedule():
                     if user_continue.upper() == "X":
                         date_loop = False
                         x = False
-                        Validate.clear_screen()
+                        clear_screen()
                         break
                     else:
                         continue
@@ -381,7 +398,7 @@ def modify_schedule():
                         if user_continue.upper() == "X":
                             date_loop = False
                             x = False
-                            Validate.clear_screen()
+                            clear_screen()
                             break
                         else:
                             continue
@@ -405,7 +422,7 @@ def modify_schedule():
                                     user_quit = input("Would like to continue Y/N? ")
                                     if user_quit.upper() == "N":
                                         date_loop = False
-                                        Validate.clear_screen()
+                                        clear_screen()
                                         break
                                     else:
                                         continue
@@ -419,7 +436,7 @@ def modify_schedule():
                     user_continue = input(red(f"{input_role} is not a valid role. Would you like to enter another role Y/N? "))
                     if user_continue.upper() == "N":
                         role_loop = False
-                        Validate.clear_screen()
+                        clear_screen()
                         break
                     else:
                         continue
@@ -442,14 +459,14 @@ def modify_schedule():
                                 user_quit = input("Would like to continue Y/N? ")
                                 if user_quit.upper() == "N":
                                     date_loop = False
-                                    Validate.clear_screen()
+                                    clear_screen()
                                     break
                                 else:
                                     continue
                                           
         Schedule.modify_schedule(username, input_date, input_role,changes) 
-        Validate.keep_output_on_screen()
-        Validate.clear_screen()
+        keep_output_on_screen()
+        clear_screen()
         break
 
 def delete_schedule():
@@ -458,7 +475,7 @@ def delete_schedule():
     while x:
         username=Validate.username_input()
         if username.upper() == "X" :
-           Validate.clear_screen()
+           clear_screen()
            x=False
         else:   
             volunteer = user_exist(username)
@@ -466,7 +483,7 @@ def delete_schedule():
                 user_continue = input(red(f"{username} does not exist. Would you like to enter another username Y/N? "))
                 if user_continue.upper() == "N":
                     x=False
-                    Validate.clear_screen()
+                    clear_screen()
                     break
                 else:
                     continue
@@ -481,10 +498,10 @@ def delete_schedule():
                             print("\n")
                             Schedule.delete_schedule(username,input_date)
                             print(green(f"\n{volunteer.first_name} {volunteer.last_name} has been successfully removed from the schedule for {input_date}\n"))
-                            Validate.keep_output_on_screen()
+                            keep_output_on_screen()
                             date_loop = False
                             x = False
-                            Validate.clear_screen()
+                            clear_screen()
                             break
                         else:
                             print(red(f"\nThere is no schedule for {volunteer.first_name} {volunteer.last_name} on {input_date}"))
@@ -492,7 +509,7 @@ def delete_schedule():
                             if user_continue.upper() == "X":
                                 date_loop = False
                                 x = False
-                                Validate.clear_screen()
+                                clear_screen()
                                 break
                             else:
                                 continue  
@@ -502,7 +519,7 @@ def delete_schedule():
                         if user_continue.upper() == "N":
                             date_loop = False
                             x = False
-                            Validate.clear_screen()
+                            clear_screen()
                             break
                         else:
                             continue  
@@ -513,7 +530,7 @@ def print_schedule_by_name():
     while x:
         username=Validate.username_input()
         if username.upper() == "X":
-           Validate.clear_screen()
+           clear_screen()
            x=False
            break
         else:
@@ -521,15 +538,15 @@ def print_schedule_by_name():
             if volunteer:
                 Schedule.query_by_name(username)
                 print("\n")
-                Validate.keep_output_on_screen()
-                Validate.clear_screen()
+                keep_output_on_screen()
+                clear_screen()
                 break    
             else:
                 print(red(f"\n{username} does not exist."))
                 user_continue = input ("\nWould you like to enter another username? Y/N ")    
                 if user_continue.upper() == "N":
                     x=False
-                    Validate.clear_screen()
+                    clear_screen()
                     break
                 
 
@@ -539,21 +556,21 @@ def print_schedule_by_date():
     while x:
         date_input = input("Enter x to quit or a valid date YYY-MM-DD: ")
         if date_input.upper() == "X":
-           Validate.clear_screen()
+           clear_screen()
            x=False
            break 
         else:
             valid_date = Validate.validate_date(date_input)
             if valid_date:
                 Schedule.query_by_date(date_input)
-                Validate.keep_output_on_screen()
-                Validate.clear_screen()
+                keep_output_on_screen()
+                clear_screen()
                 break    
             else:
                 user_continue = input(red("Invalid date. Would you like to re-enter the date Y/N ? "))
                 if user_continue.upper() == "N":
                     x=False
-                    Validate.clear_screen()
+                    clear_screen()
                     break
 
 
@@ -649,7 +666,7 @@ def main():
         elif options_choice == "Print Schedule by Name":
             print_schedule_by_name() 
         elif options_choice == "Quit":
-            Validate.clear_screen()
+            clear_screen()
             quitting = True  
         else:
             print(red("You must select an option"))      

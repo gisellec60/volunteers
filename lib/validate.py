@@ -1,10 +1,9 @@
 import re
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-# from model import Volunteer
-engine = create_engine('sqlite:///volunteers.db')
-Session = sessionmaker(bind=engine)
-session = Session()
+# engine = create_engine('sqlite:///volunteers.db')
+# Session = sessionmaker(bind=engine)
+# session = Session()
 
 class Validate():
 
@@ -112,26 +111,4 @@ class Validate():
         match = regex.fullmatch(date)
         return match
 
-    def username_input():
-        username = input("\nEnter the username or x to quit: ")
-        username = username.strip()
-        return username     
-
-    def keep_output_screen():
-        user_input = input("x to exit: ") 
-        user_input = user_input.strip()     
-        return user_input
     
-    def clear_screen():
-            print("\n" * 40)
-
-    def user_exist(username):
-            volunteer = session.query(Volunteer).filter(Volunteer.username==username).first() 
-            return volunteer 
-
-    def keep_output_on_screen():
-            user_input = input("\nEnter to exit: ") 
-            return user_input
-
-    def try_again():
-        input("\nEnter email or x to quit: ")
