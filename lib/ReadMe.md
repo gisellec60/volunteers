@@ -1,6 +1,11 @@
 # The Scheduler 
 ![Alt Text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ44Mv9l14uBnelUF6svssPE5YhLgZ6WZTgRQ&usqp=CAU)
 
+### To Run The Scheduler:
+- clone repository https://github.com/gisellec60/volunteers
+- cd lib
+- run scheduling.py
+
 ***The Scheduler*** was born out of the need for a more robust volunteer scheduling system for my church. The app manages the scheduling of the volunteers by enabling a user to add, modify, and delete a volunteer or schedule, and query the schedule by date or username. Ideally only people with admin privileges will be able to make any changes to the schedule however, everyone will be able to query the schedule by date and username. Currently there are no admin privileges set for the app so everyone has full access.
 
 The Scheduler consist of 4 tables: 
@@ -165,7 +170,7 @@ There are a lot of moving parts to this app because of the validation needed to 
 
 ## Blog
 
-For a deep dive into The Scheduler please checkout my blog [The Scheduler](https://dev.to/gisellec60/the-scheduler-hc7)
+For a more in depth look at The Scheduler please checkout my blog [The Scheduler](https://dev.to/gisellec60/the-scheduler-hc7)
 
 ## Update
 
