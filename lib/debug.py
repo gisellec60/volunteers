@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-# from model import Volunteer, Role, Schedule, volunteer_role, Validate
+from model import Volunteer, Role, Schedule, volunteer_role, Validate
 import ipdb;
 
 engine = create_engine('sqlite:///volunteers.db')

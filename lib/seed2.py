@@ -56,41 +56,8 @@ def create_roles():
         session.add(role) 
         session.commit()
         roles.append(role)
-    return roles  
-
-def create_schedules():
-    schedules = []
-    for _ in range(50):
-        schedule = Schedule(
-            date = fake.date_this_month(after_today=True),
-            swappout_id=""
-        ) 
-        session.add(schedule) 
-        session.commit()
-        schedules.append(schedule)
-    return schedules    
-
-def populate_swappout(schedules):
-    for i in range(2,34,5):
-        schedules[i].swappout_id = random.randint(1,34)
-        session.commit()     
-
-def populate_schedule(volunteers,roles,schedules):
-    for schedule in schedules:
-        schedule.role = rc(roles)
-        schedule.volunteer = rc(volunteers)
-       
-    session.add_all(schedules) 
-    session.commit()
-    return volunteers,roles,schedules
-          
-def floater_setting(volunteers):
-    for volunteer in volunteers:
-        if volunteer.floater:
-            volunteer.week = 5
-            session.commit()
-
-
+    return roles
+  
 def relate_vol_pos(volunteers,roles):
     for role in roles:
         if role.position != 'prayer':
@@ -104,6 +71,42 @@ def relate_vol_pos(volunteers,roles):
                 volunteers[j].roles.append(role)
                 session.commit()
 
+
+def create_schedules():
+    schedules = []
+    for _ in range(50):
+        schedule = Schedule(
+            date = fake.date_this_month(after_today=True),
+            swappout_id=""
+        ) 
+        session.add(schedule) 
+        session.commit()
+        schedules.append(schedule)
+    return schedules    
+
+#Get random volunter scheduled
+def populate_schedule(volunteers,schedules):
+    for schedule in schedules:
+        schedule.vol_id = rc(volunteers)
+
+def add_roles_to_schedule(schedules):
+        for schedule in schedules:
+            volunteer = session.query(Volunteer).filter(Volunteer.id==schedule.vol_id).first() 
+            print('this is volunteer==========================',volunteer)
+            for role in volunteer.roles:
+                schedule.role_id = role.id
+
+def populate_swappout(schedules):
+    for i in range(2,34,5):
+        schedules[i].swappout_id = random.randint(1,34)
+        session.commit()     
+
+def floater_setting(volunteers):
+    for volunteer in volunteers:
+        if volunteer.floater:
+            volunteer.week = 5
+            session.commit()
+
 def populate_assign(volunteers):
      for volunteer in volunteers:
         if not volunteer.schedules:
@@ -114,9 +117,9 @@ if __name__ == '__main__':
     delete_records()
     roles = create_roles()
     volunteers = create_volunteers()
-    schedules = create_schedules()
-    volunteers,roles,schedules = populate_schedule(volunteers,roles,schedules)
-    floater_setting(volunteers)
     relate_vol_pos(volunteers,roles)
+    schedules = create_schedules()
+    volunteers,schedules = populate_schedule(volunteers,schedules)
+    floater_setting(volunteers)
     populate_assign(volunteers)
     populate_swappout(schedules)
