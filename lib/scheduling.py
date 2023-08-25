@@ -6,7 +6,7 @@ from model import  Volunteer, Schedule, Validate
 from simple_term_menu import TerminalMenu
 from prettycli import red, green
 from user_functions import (
-    clear_screen, user_exist,
+    clear_screen, user_exist, username_input,
     keep_output_on_screen,get_volunteer_information
 )
 from messages import(
@@ -77,7 +77,7 @@ def delete_volunteer():
     print(red(delete_volunteer_banner))
     x=True
     while x:
-        username = Validate.username_input()
+        username = username_input()
         if username.upper() == "X":
            clear_screen()
            x=False
@@ -442,7 +442,7 @@ def delete_schedule():
     print(red(delete_schedule_banner))
     x=True
     while x:
-        username=Validate.username_input()
+        username=username_input()
         if username.upper() == "X" :
            clear_screen()
            x=False
@@ -497,7 +497,7 @@ def print_schedule_by_name():
     print(red(query_by_name_banner))
     x=True
     while x:
-        username=Validate.username_input()
+        username=username_input()
         if username.upper() == "X":
            clear_screen()
            x=False
